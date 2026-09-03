@@ -18,6 +18,14 @@ from .tokens import account_activation_token
 
 User = get_user_model()
 
+def demo_login(request):
+    demo_user = User.objects.get(
+        email='demo-user@saasvendedor.com.br'
+    )
+
+    login(request, demo_user, backend='django.contrib.auth.backends.ModelBackend',)
+
+    return redirect('dashboard:home')
 
 class SignUpView(FormView):
     """Public sign up: creates an inactive Tenant plus its admin user, and

@@ -11,9 +11,7 @@
     "
 >
 
-    <!-- =====================================================
-         MOBILE OVERLAY
-    ====================================================== -->
+    <!-- MOBILE OVERLAY -->
 
     <div
         id="sidebar-overlay"
@@ -29,9 +27,7 @@
     ></div>
 
 
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
+    <!-- SIDEBAR -->
 
     <aside
         id="app-sidebar"
@@ -53,15 +49,12 @@
             transition-[width,transform]
             duration-300
             ease-out
-
             -translate-x-full
             md:translate-x-0
         "
     >
 
-        <!-- =================================================
-             SIDEBAR HEADER
-        ================================================== -->
+        <!-- SIDEBAR HEADER -->
 
         <div
             class="
@@ -108,7 +101,6 @@
                     SV
                 </div>
 
-
                 <!-- Brand -->
 
                 <span
@@ -129,7 +121,7 @@
             </a>
 
 
-            <!-- Collapse button -->
+            <!-- Collapse -->
 
             <button
                 id="sidebar-toggle"
@@ -138,7 +130,6 @@
                 aria-expanded="true"
                 class="
                     hidden
-                    md:flex
                     h-8
                     w-8
                     shrink-0
@@ -149,6 +140,7 @@
                     transition
                     hover:bg-white/80
                     hover:text-zinc-900
+                    md:flex
                 "
             >
 
@@ -173,9 +165,7 @@
         </div>
 
 
-        <!-- =================================================
-             NAVIGATION
-        ================================================== -->
+        <!-- NAVIGATION -->
 
         <nav
             class="
@@ -187,7 +177,7 @@
             "
         >
 
-            <!-- Main -->
+            <!-- Main navigation -->
 
             <div class="space-y-1">
 
@@ -272,6 +262,7 @@
                             stroke-linejoin="round"
                             d="m7.5 3.75 9 0 3.75 3.75v9l-3.75 3.75h-9L3.75 16.5v-9L7.5 3.75Z"
                         />
+
                         <path
                             stroke-linecap="round"
                             stroke-linejoin="round"
@@ -378,76 +369,73 @@
             </div>
 
 
+            <!-- Administration -->
+
             {% if request.user.is_tenant_admin %}
 
-            <!-- =================================================
-                 ADMINISTRATION
-            ================================================== -->
-
-            <div
-                class="
-                    my-5
-                    border-t
-                    border-zinc-200/70
-                "
-            ></div>
-
-
-            <div>
-
-                <p
-                    data-sidebar-text
+                <div
                     class="
-                        mb-2
-                        px-3
-                        text-[10px]
-                        font-semibold
-                        uppercase
-                        tracking-widest
-                        text-zinc-400
+                        my-5
+                        border-t
+                        border-zinc-200/70
                     "
-                >
-                    Administração
-                </p>
+                ></div>
 
+                <div>
 
-                <a
-                    href="{% url 'accounts:employee_list' %}"
-                    class="sidebar-link"
-                    data-tooltip="Funcionários"
-                >
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.7"
-                        stroke="currentColor"
-                        class="sidebar-icon"
+                    <p
+                        data-sidebar-text
+                        class="
+                            mb-2
+                            px-3
+                            text-[10px]
+                            font-semibold
+                            uppercase
+                            tracking-widest
+                            text-zinc-400
+                        "
                     >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M15 19.128a9.38 9.38 0 0 0 3.75-1.5M9 19.128a9.38 9.38 0 0 1-3.75-1.5M15 19.128v-.378a3.75 3.75 0 0 0-3.75-3.75h-2.5A3.75 3.75 0 0 0 5 18.75v.378M15 19.128a9.38 9.38 0 0 0 3.75-1.5M15 19.128v-.378a3.75 3.75 0 0 1 3.75-3.75h.5A3.75 3.75 0 0 1 23 18.75v.378M12 11.25a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5ZM18.75 11.25a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
-                        />
-                    </svg>
+                        Administração
+                    </p>
 
-                    <span data-sidebar-text>
-                        Funcionários
-                    </span>
 
-                </a>
+                    <!-- Funcionários -->
 
-            </div>
+                    <a
+                        href="{% url 'accounts:employee_list' %}"
+                        class="sidebar-link"
+                        data-tooltip="Funcionários"
+                    >
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.7"
+                            stroke="currentColor"
+                            class="sidebar-icon"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15 19.128a9.38 9.38 0 0 0 3.75-1.5M9 19.128a9.38 9.38 0 0 1-3.75-1.5M15 19.128v-.378a3.75 3.75 0 0 0-3.75-3.75h-2.5A3.75 3.75 0 0 0 5 18.75v.378M15 19.128a9.38 9.38 0 0 0 3.75-1.5M15 19.128v-.378a3.75 3.75 0 0 1 3.75-3.75h.5A3.75 3.75 0 0 1 23 18.75v.378M12 11.25a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5ZM18.75 11.25a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                            />
+                        </svg>
+
+                        <span data-sidebar-text>
+                            Funcionários
+                        </span>
+
+                    </a>
+
+                </div>
 
             {% endif %}
 
         </nav>
 
 
-        <!-- =================================================
-             SIDEBAR FOOTER
-        ================================================== -->
+        <!-- SIDEBAR FOOTER -->
 
         <div
             class="
@@ -457,6 +445,8 @@
                 p-3
             "
         >
+
+            <!-- User -->
 
             <div
                 class="
@@ -490,6 +480,8 @@
                     {{ request.user.get_full_name|first|upper }}
                 </div>
 
+
+                <!-- User information -->
 
                 <div
                     data-sidebar-text
@@ -526,14 +518,62 @@
 
             </div>
 
+
+            <!-- Logout -->
+
+            <form
+                method="post"
+                action="{% url 'accounts:logout' %}"
+                class="mt-2"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="
+                        sidebar-link
+                        w-full
+                        text-left
+                    "
+                    data-tooltip="Sair"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.7"
+                        stroke="currentColor"
+                        class="sidebar-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15"
+                        />
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M18 8.25 21.75 12 18 15.75M21.75 12H9"
+                        />
+                    </svg>
+
+                    <span data-sidebar-text>
+                        Sair
+                    </span>
+
+                </button>
+
+            </form>
+
         </div>
 
     </aside>
 
 
-    <!-- =====================================================
-         MAIN AREA
-    ====================================================== -->
+    <!-- MAIN AREA -->
 
     <div
         id="app-main"
@@ -547,9 +587,7 @@
         "
     >
 
-        <!-- =================================================
-             TOPBAR
-        ================================================== -->
+        <!-- TOPBAR -->
 
         <header
             class="
@@ -615,7 +653,7 @@
                 </button>
 
 
-                <!-- Desktop breadcrumb/title -->
+                <!-- Page context -->
 
                 <div class="hidden md:block">
 
@@ -684,37 +722,6 @@
                         {{ request.user.get_full_name|first|upper }}
                     </div>
 
-
-                    <!-- Logout -->
-
-                    <form
-                        method="post"
-                        action="{% url 'accounts:logout' %}"
-                    >
-
-                        {% csrf_token %}
-
-                        <button
-                            type="submit"
-                            class="
-                                hidden
-                                rounded-lg
-                                px-3
-                                py-2
-                                text-xs
-                                font-medium
-                                text-zinc-500
-                                transition
-                                hover:bg-white
-                                hover:text-zinc-900
-                                sm:block
-                            "
-                        >
-                            Sair
-                        </button>
-
-                    </form>
-
                 </div>
 
             </div>
@@ -722,9 +729,7 @@
         </header>
 
 
-        <!-- =================================================
-             CONTENT
-        ================================================== -->
+        <!-- CONTENT -->
 
         <main
             class="
@@ -737,7 +742,86 @@
 
             <div class="mx-auto max-w-[1600px]">
 
+                <!-- DEMO MODE -->
+
+                {% if request.user.is_demo %}
+
+                    <div
+                        class="
+                            mb-6
+                            flex
+                            items-start
+                            gap-3
+                            rounded-2xl
+                            border
+                            border-amber-200/70
+                            bg-amber-50/70
+                            px-4
+                            py-3.5
+                            text-sm
+                            text-amber-800
+                            shadow-sm
+                            backdrop-blur-xl
+                        "
+                    >
+
+                        <div
+                            class="
+                                mt-0.5
+                                flex
+                                h-8
+                                w-8
+                                shrink-0
+                                items-center
+                                justify-center
+                                rounded-lg
+                                bg-amber-100
+                                text-amber-700
+                            "
+                        >
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.8"
+                                stroke="currentColor"
+                                class="h-4 w-4"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M12 9v3.75m0 3h.008v.008H12v-.008ZM10.5 3.75h3l7.5 13.5a1.5 1.5 0 0 1-1.31 2.25H4.31A1.5 1.5 0 0 1 3 17.25l7.5-13.5Z"
+                                />
+                            </svg>
+
+                        </div>
+
+
+                        <div class="min-w-0">
+
+                            <p class="font-semibold">
+                                Modo demonstração
+                            </p>
+
+                            <p class="mt-0.5 text-xs text-amber-700/80">
+                                Você está explorando uma conta de demonstração.
+                                O cadastro e a edição de informações estão desabilitados.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Messages -->
+
                 {% include 'partials/_messages.html' %}
+
+
+                <!-- Page content -->
 
                 {% block app_content %}{% endblock %}
 
@@ -750,15 +834,9 @@
 </div>
 
 
-<!-- =========================================================
-     SIDEBAR STYLES
-========================================================== -->
+<!-- SIDEBAR STYLES -->
 
 <style>
-
-    /* =====================================================
-       NAV ITEM
-    ====================================================== */
 
     .sidebar-link {
         position: relative;
@@ -821,9 +899,7 @@
     }
 
 
-    /* =====================================================
-       COLLAPSED SIDEBAR
-    ====================================================== */
+    /* COLLAPSED SIDEBAR */
 
     #app-layout.sidebar-collapsed #app-sidebar {
         width: 72px;
@@ -866,9 +942,7 @@
     }
 
 
-    /* =====================================================
-       TOOLTIPS
-    ====================================================== */
+    /* TOOLTIPS */
 
     #app-layout.sidebar-collapsed .sidebar-link::after {
         content: attr(data-tooltip);
@@ -921,9 +995,7 @@
     }
 
 
-    /* =====================================================
-       MOBILE
-    ====================================================== */
+    /* MOBILE */
 
     @media (max-width: 767px) {
 
@@ -978,9 +1050,7 @@
 </style>
 
 
-<!-- =========================================================
-     SIDEBAR JAVASCRIPT
-========================================================== -->
+<!-- SIDEBAR JAVASCRIPT -->
 
 <script>
 
@@ -1005,9 +1075,7 @@
             document.getElementById('sidebar-overlay');
 
 
-        /* =================================================
-           DESKTOP STATE
-        ================================================== */
+        /* DESKTOP STATE */
 
         const savedState =
             localStorage.getItem('sidebar-collapsed');
@@ -1016,6 +1084,7 @@
             savedState === 'true' &&
             window.innerWidth >= 768
         ) {
+
             layout.classList.add(
                 'sidebar-collapsed'
             );
@@ -1024,12 +1093,11 @@
                 'aria-expanded',
                 'false'
             );
+
         }
 
 
-        /* =================================================
-           TOGGLE SIDEBAR
-        ================================================== */
+        /* TOGGLE SIDEBAR */
 
         function toggleSidebar() {
 
@@ -1067,9 +1135,7 @@
         );
 
 
-        /* =================================================
-           MOBILE OPEN
-        ================================================== */
+        /* MOBILE SIDEBAR */
 
         function openMobileSidebar() {
 
@@ -1109,9 +1175,7 @@
         );
 
 
-        /* =================================================
-           ESC
-        ================================================== */
+        /* ESC */
 
         document.addEventListener(
             'keydown',
@@ -1125,9 +1189,7 @@
         );
 
 
-        /* =================================================
-           CTRL + B
-        ================================================== */
+        /* CTRL + B */
 
         document.addEventListener(
             'keydown',
@@ -1150,9 +1212,7 @@
         );
 
 
-        /* =================================================
-           RESPONSIVE RESET
-        ================================================== */
+        /* RESPONSIVE RESET */
 
         window.addEventListener(
             'resize',

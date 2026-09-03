@@ -64,6 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     feature_permissions = models.JSONField('permissões de funcionalidades', default=list, blank=True)
     created_at = models.DateTimeField('criado em', auto_now_add=True)
     updated_at = models.DateTimeField('atualizado em', auto_now=True)
+    is_demo = models.BooleanField("usuário de demonstração", default=False)
 
     objects = CustomUserManager()
 

@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-change-this-secret-key-before-deploying-to-production'
 
-DEBUG = True if ENVIRONMENT == 'development' else True
+DEBUG = True if ENVIRONMENT == 'development' else False
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middlewares.DemoReadOnlyMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
