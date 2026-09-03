@@ -12,5 +12,4 @@ staticfiles/
 htmlcov/
 *.egg-info/
 .DS_Store
-migrations/
 .env
