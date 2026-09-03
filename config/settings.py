@@ -16,10 +16,10 @@ SECRET_KEY = 'django-insecure-change-this-secret-key-before-deploying-to-product
 DEBUG = True if ENVIRONMENT == 'development' else False
 
 ALLOWED_HOSTS = [
-    "raulcamargopenna.com.br",
-    "www.raulcamargopenna.com.br",
-    "https://raulcamargopenna.com.br",
-    "https://www.raulcamargopenna.com.br",
+    "raulcamargo.com.br",
+    "www.raulcamargo.com.br",
+    "https://raulcamargo.com.br",
+    "https://www.raulcamargo.com.br",
     "saas-vendedor.onrender.com",
     "https://saas-vendedor.onrender.com/"
 ]
