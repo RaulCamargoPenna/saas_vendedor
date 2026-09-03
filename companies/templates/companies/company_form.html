@@ -3,38 +3,217 @@
 {% block title %}{% if object %}Editar empresa{% else %}Nova empresa{% endif %}{% endblock %}
 
 {% block app_content %}
-<h1 class="text-2xl font-semibold tracking-tight mb-6">{% if object %}Editar empresa{% else %}Nova empresa{% endif %}</h1>
 
-<form method="post" class="max-w-xl rounded-lg border border-zinc-200 bg-white p-6 shadow-sm space-y-4">
-    {% csrf_token %}
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.cnpj.label }}</label>
-        {{ form.cnpj }}
-        {% if form.cnpj.errors %}<p class="text-xs text-red-600 mt-1">{{ form.cnpj.errors|join:', ' }}</p>{% endif %}
+<!-- HEADER -->
+<div class="mb-8">
+    <div class="mb-2 flex items-center gap-2 text-sm text-zinc-500">
+        <a
+            href="{% url 'companies:list' %}"
+            class="transition-colors hover:text-zinc-900"
+        >
+            Empresas
+        </a>
+
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.8"
+                d="m9 18 6-6-6-6"
+            />
+        </svg>
+
+        <span class="text-zinc-900">
+            {% if object %}Editar{% else %}Nova empresa{% endif %}
+        </span>
     </div>
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.trade_name.label }}</label>
-        {{ form.trade_name }}
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.legal_name.label }}</label>
-        {{ form.legal_name }}
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.email.label }}</label>
-        {{ form.email }}
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.phone.label }}</label>
-        {{ form.phone }}
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.business_area.label }}</label>
-        {{ form.business_area }}
-    </div>
-    <div class="flex gap-3">
-        <button type="submit" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800">Salvar</button>
-        <a href="{% url 'companies:list' %}" class="rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium hover:bg-zinc-50">Cancelar</a>
-    </div>
-</form>
+
+    <h1 class="text-3xl font-semibold tracking-tight text-zinc-950">
+        {% if object %}Editar empresa{% else %}Nova empresa{% endif %}
+    </h1>
+
+    <p class="mt-1 text-sm text-zinc-500">
+        {% if object %}
+            Atualize as informações cadastrais da empresa.
+        {% else %}
+            Preencha os dados abaixo para cadastrar uma nova empresa.
+        {% endif %}
+    </p>
+</div>
+
+<!-- FORM -->
+<div class="max-w-3xl">
+    <form
+        method="post"
+        class="glass-card overflow-hidden"
+    >
+        {% csrf_token %}
+
+        <!-- COMPANY DATA -->
+        <div class="border-b border-zinc-200/60 px-6 py-6 sm:px-8">
+            <div class="mb-6">
+                <h2 class="text-base font-semibold text-zinc-900">
+                    Dados da empresa
+                </h2>
+
+                <p class="mt-1 text-sm text-zinc-500">
+                    Informações principais para identificação e contato.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                <!-- CNPJ -->
+                <div class="sm:col-span-2">
+                    <label
+                        for="{{ form.cnpj.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-zinc-700"
+                    >
+                        {{ form.cnpj.label }}
+                    </label>
+
+                    {{ form.cnpj }}
+
+                    {% if form.cnpj.errors %}
+                    <p class="mt-1.5 text-xs font-medium text-red-600">
+                        {{ form.cnpj.errors|join:', ' }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- TRADE NAME -->
+                <div>
+                    <label
+                        for="{{ form.trade_name.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-zinc-700"
+                    >
+                        {{ form.trade_name.label }}
+                    </label>
+
+                    {{ form.trade_name }}
+
+                    {% if form.trade_name.errors %}
+                    <p class="mt-1.5 text-xs font-medium text-red-600">
+                        {{ form.trade_name.errors|join:', ' }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- LEGAL NAME -->
+                <div>
+                    <label
+                        for="{{ form.legal_name.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-zinc-700"
+                    >
+                        {{ form.legal_name.label }}
+                    </label>
+
+                    {{ form.legal_name }}
+
+                    {% if form.legal_name.errors %}
+                    <p class="mt-1.5 text-xs font-medium text-red-600">
+                        {{ form.legal_name.errors|join:', ' }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- EMAIL -->
+                <div>
+                    <label
+                        for="{{ form.email.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-zinc-700"
+                    >
+                        {{ form.email.label }}
+                    </label>
+
+                    {{ form.email }}
+
+                    {% if form.email.errors %}
+                    <p class="mt-1.5 text-xs font-medium text-red-600">
+                        {{ form.email.errors|join:', ' }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- PHONE -->
+                <div>
+                    <label
+                        for="{{ form.phone.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-zinc-700"
+                    >
+                        {{ form.phone.label }}
+                    </label>
+
+                    {{ form.phone }}
+
+                    {% if form.phone.errors %}
+                    <p class="mt-1.5 text-xs font-medium text-red-600">
+                        {{ form.phone.errors|join:', ' }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- BUSINESS AREA -->
+                <div class="sm:col-span-2">
+                    <label
+                        for="{{ form.business_area.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-zinc-700"
+                    >
+                        {{ form.business_area.label }}
+                    </label>
+
+                    {{ form.business_area }}
+
+                    {% if form.business_area.errors %}
+                    <p class="mt-1.5 text-xs font-medium text-red-600">
+                        {{ form.business_area.errors|join:', ' }}
+                    </p>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="flex flex-col-reverse gap-3 bg-zinc-50/40 px-6 py-5 sm:flex-row sm:justify-end sm:px-8">
+
+            <a
+                href="{% url 'companies:list' %}"
+                class="btn-secondary inline-flex items-center justify-center gap-2"
+            >
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M6 18 18 6M6 6l12 12"
+                    />
+                </svg>
+                Cancelar
+            </a>
+
+            <button
+                type="submit"
+                class="btn-primary inline-flex items-center justify-center gap-2"
+            >
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="m5 12 4 4L19 6"
+                    />
+                </svg>
+
+                {% if object %}
+                    Salvar alterações
+                {% else %}
+                    Cadastrar empresa
+                {% endif %}
+            </button>
+
+        </div>
+    </form>
+</div>
+
 {% endblock %}

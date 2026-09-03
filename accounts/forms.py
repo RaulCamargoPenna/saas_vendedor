@@ -99,3 +99,50 @@ class EmployeeCreationForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': INPUT_CLASSES}),
             'role': forms.TextInput(attrs={'class': INPUT_CLASSES}),
         }
+
+class EmployeeForm(forms.ModelForm):
+    """Form used by a tenant admin to create or edit an employee."""
+
+    feature_permissions = forms.MultipleChoiceField(
+        label='Permissões',
+        choices=FEATURE_PERMISSIONS,
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+            'role',
+            'feature_permissions',
+        ]
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': INPUT_CLASSES}),
+            'last_name': forms.TextInput(attrs={'class': INPUT_CLASSES}),
+            'email': forms.EmailInput(attrs={'class': INPUT_CLASSES}),
+            'role': forms.TextInput(attrs={'class': INPUT_CLASSES}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.pk:
+            self.fields['feature_permissions'].initial = (
+                self.instance.feature_permissions or []
+            )
+
+    def save(self, commit=True):
+        employee = super().save(commit=False)
+
+        employee.feature_permissions = self.cleaned_data.get(
+            'feature_permissions',
+            []
+        )
+
+        if commit:
+            employee.save()
+
+        return employee

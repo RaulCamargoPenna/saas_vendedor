@@ -22,10 +22,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         context['companies_count'] = Company.objects.filter(tenant=tenant).count()
 
-        sales_this_month = list(Sale.objects.filter(tenant=tenant, sale_date__gte=first_day_of_month))
+        sales_this_month = Sale.objects.filter(tenant=tenant, sale_date__gte=first_day_of_month)
         context['sales_this_month_count'] = len(sales_this_month)
         context['total_sale_value_month'] = sum((sale.sale_value for sale in sales_this_month), start=0)
-        context['total_commission_month'] = sum((sale.commission_amount for sale in sales_this_month), start=0)
+        context['total_commission_month'] = sum((sale.commission_amount for sale in sales_this_month.filter(payment_confirmed=True)), start=0)
+        context['total__pending_commission_month'] = sum((sale.commission_amount for sale in sales_this_month.filter(payment_confirmed=False)), start=0)
 
         context['pending_suggestions_count'] = ConnectionSuggestion.objects.filter(
             tenant=tenant, status=ConnectionSuggestion.STATUS_PENDING,

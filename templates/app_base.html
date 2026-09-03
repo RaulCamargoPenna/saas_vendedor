@@ -1,49 +1,1180 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="min-h-screen flex">
-    <!-- Sidebar -->
-    <aside class="hidden md:flex md:flex-col w-64 border-r border-zinc-200 bg-white shrink-0">
-        <div class="h-16 flex items-center px-6 border-b border-zinc-200">
-            <a href="{% url 'dashboard:home' %}" class="text-lg font-semibold tracking-tight">SaaS Vendedor</a>
+
+<div
+    id="app-layout"
+    class="
+        relative
+        min-h-screen
+        bg-transparent
+    "
+>
+
+    <!-- =====================================================
+         MOBILE OVERLAY
+    ====================================================== -->
+
+    <div
+        id="sidebar-overlay"
+        class="
+            fixed
+            inset-0
+            z-40
+            hidden
+            bg-black/20
+            backdrop-blur-sm
+            md:hidden
+        "
+    ></div>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        id="app-sidebar"
+        class="
+            group/sidebar
+            fixed
+            inset-y-0
+            left-0
+            z-50
+            flex
+            w-64
+            flex-col
+            border-r
+            border-white/70
+            bg-white/65
+            backdrop-blur-2xl
+            backdrop-saturate-150
+            shadow-[4px_0_30px_rgba(0,0,0,0.04)]
+            transition-[width,transform]
+            duration-300
+            ease-out
+
+            -translate-x-full
+            md:translate-x-0
+        "
+    >
+
+        <!-- =================================================
+             SIDEBAR HEADER
+        ================================================== -->
+
+        <div
+            class="
+                flex
+                h-16
+                shrink-0
+                items-center
+                border-b
+                border-zinc-200/60
+                px-3
+            "
+        >
+
+            <a
+                href="{% url 'dashboard:home' %}"
+                class="
+                    flex
+                    min-w-0
+                    flex-1
+                    items-center
+                    gap-3
+                    px-2
+                "
+            >
+
+                <!-- Logo -->
+
+                <div
+                    class="
+                        flex
+                        h-9
+                        w-9
+                        shrink-0
+                        items-center
+                        justify-center
+                        rounded-xl
+                        bg-zinc-900
+                        text-sm
+                        font-bold
+                        text-white
+                        shadow-sm
+                    "
+                >
+                    SV
+                </div>
+
+
+                <!-- Brand -->
+
+                <span
+                    data-sidebar-text
+                    class="
+                        whitespace-nowrap
+                        text-base
+                        font-semibold
+                        tracking-tight
+                        text-zinc-900
+                        transition-all
+                        duration-200
+                    "
+                >
+                    SaaS Vendedor
+                </span>
+
+            </a>
+
+
+            <!-- Collapse button -->
+
+            <button
+                id="sidebar-toggle"
+                type="button"
+                aria-label="Recolher menu"
+                aria-expanded="true"
+                class="
+                    hidden
+                    md:flex
+                    h-8
+                    w-8
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-lg
+                    text-zinc-400
+                    transition
+                    hover:bg-white/80
+                    hover:text-zinc-900
+                "
+            >
+
+                <svg
+                    id="sidebar-toggle-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.8"
+                    stroke="currentColor"
+                    class="h-4 w-4"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15.75 19.5 8.25 12l7.5-7.5"
+                    />
+                </svg>
+
+            </button>
+
         </div>
-        <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
-            <a href="{% url 'dashboard:home' %}" class="block rounded-md px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100">Dashboard</a>
-            <a href="{% url 'companies:list' %}" class="block rounded-md px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100">Empresas</a>
-            <a href="{% url 'products:category_list' %}" class="block rounded-md px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100">Categorias</a>
-            <a href="{% url 'products:list' %}" class="block rounded-md px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100">Produtos</a>
-            <a href="{% url 'sales:list' %}" class="block rounded-md px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100">Vendas</a>
-            <a href="{% url 'suggestions:list' %}" class="block rounded-md px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100">Sugestões</a>
-            {% if request.user.is_tenant_admin %}
-            <div class="pt-4 mt-4 border-t border-zinc-100">
-                <p class="px-3 text-xs uppercase text-zinc-400 mb-1">Administração</p>
-                <a href="{% url 'accounts:employee_list' %}" class="block rounded-md px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100">Funcionários</a>
+
+
+        <!-- =================================================
+             NAVIGATION
+        ================================================== -->
+
+        <nav
+            class="
+                flex-1
+                overflow-y-auto
+                overflow-x-hidden
+                px-3
+                py-5
+            "
+        >
+
+            <!-- Main -->
+
+            <div class="space-y-1">
+
+                <!-- Dashboard -->
+
+                <a
+                    href="{% url 'dashboard:home' %}"
+                    class="sidebar-link"
+                    data-tooltip="Dashboard"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.7"
+                        stroke="currentColor"
+                        class="sidebar-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3.75 3.75h6.5v6.5h-6.5zM13.75 3.75h6.5v6.5h-6.5zM3.75 13.75h6.5v6.5h-6.5zM13.75 13.75h6.5v6.5h-6.5z"
+                        />
+                    </svg>
+
+                    <span data-sidebar-text>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <!-- Empresas -->
+
+                <a
+                    href="{% url 'companies:list' %}"
+                    class="sidebar-link"
+                    data-tooltip="Empresas"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.7"
+                        stroke="currentColor"
+                        class="sidebar-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3.75 21h16.5M5.25 21V6.75A1.5 1.5 0 0 1 6.75 5.25h10.5a1.5 1.5 0 0 1 1.5 1.5V21M9 8.25h1.5M13.5 8.25H15M9 12h1.5M13.5 12H15M9 15.75h1.5M13.5 15.75H15M10.5 21v-2.25h3V21"
+                        />
+                    </svg>
+
+                    <span data-sidebar-text>
+                        Empresas
+                    </span>
+
+                </a>
+
+
+                <!-- Categorias -->
+
+                <a
+                    href="{% url 'products:category_list' %}"
+                    class="sidebar-link"
+                    data-tooltip="Categorias"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.7"
+                        stroke="currentColor"
+                        class="sidebar-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="m7.5 3.75 9 0 3.75 3.75v9l-3.75 3.75h-9L3.75 16.5v-9L7.5 3.75Z"
+                        />
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M8.25 9.75h7.5M8.25 14.25h4.5"
+                        />
+                    </svg>
+
+                    <span data-sidebar-text>
+                        Categorias
+                    </span>
+
+                </a>
+
+
+                <!-- Produtos -->
+
+                <a
+                    href="{% url 'products:list' %}"
+                    class="sidebar-link"
+                    data-tooltip="Produtos"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.7"
+                        stroke="currentColor"
+                        class="sidebar-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="m3.75 7.5 8.25-3.75 8.25 3.75M3.75 7.5 12 11.25 20.25 7.5M3.75 7.5v9L12 20.25l8.25-3.75v-9M12 11.25v9"
+                        />
+                    </svg>
+
+                    <span data-sidebar-text>
+                        Produtos
+                    </span>
+
+                </a>
+
+
+                <!-- Vendas -->
+
+                <a
+                    href="{% url 'sales:list' %}"
+                    class="sidebar-link"
+                    data-tooltip="Vendas"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.7"
+                        stroke="currentColor"
+                        class="sidebar-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 3.75v16.5M16.5 7.5c0-1.657-2.015-3-4.5-3S7.5 5.843 7.5 7.5s2.015 3 4.5 3 4.5 1.343 4.5 3-2.015 3-4.5 3-4.5-1.343-4.5-3"
+                        />
+                    </svg>
+
+                    <span data-sidebar-text>
+                        Vendas
+                    </span>
+
+                </a>
+
+
+                <!-- Sugestões -->
+
+                <a
+                    href="{% url 'suggestions:list' %}"
+                    class="sidebar-link"
+                    data-tooltip="Sugestões"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.7"
+                        stroke="currentColor"
+                        class="sidebar-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M9.75 18.75h4.5M10.5 21h3M8.25 14.25a6 6 0 1 1 7.5 0c-.94.56-1.5 1.57-1.5 2.66v.09h-4.5v-.09c0-1.09-.56-2.1-1.5-2.66Z"
+                        />
+                    </svg>
+
+                    <span data-sidebar-text>
+                        Sugestões
+                    </span>
+
+                </a>
+
             </div>
+
+
+            {% if request.user.is_tenant_admin %}
+
+            <!-- =================================================
+                 ADMINISTRATION
+            ================================================== -->
+
+            <div
+                class="
+                    my-5
+                    border-t
+                    border-zinc-200/70
+                "
+            ></div>
+
+
+            <div>
+
+                <p
+                    data-sidebar-text
+                    class="
+                        mb-2
+                        px-3
+                        text-[10px]
+                        font-semibold
+                        uppercase
+                        tracking-widest
+                        text-zinc-400
+                    "
+                >
+                    Administração
+                </p>
+
+
+                <a
+                    href="{% url 'accounts:employee_list' %}"
+                    class="sidebar-link"
+                    data-tooltip="Funcionários"
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.7"
+                        stroke="currentColor"
+                        class="sidebar-icon"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15 19.128a9.38 9.38 0 0 0 3.75-1.5M9 19.128a9.38 9.38 0 0 1-3.75-1.5M15 19.128v-.378a3.75 3.75 0 0 0-3.75-3.75h-2.5A3.75 3.75 0 0 0 5 18.75v.378M15 19.128a9.38 9.38 0 0 0 3.75-1.5M15 19.128v-.378a3.75 3.75 0 0 1 3.75-3.75h.5A3.75 3.75 0 0 1 23 18.75v.378M12 11.25a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5ZM18.75 11.25a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                        />
+                    </svg>
+
+                    <span data-sidebar-text>
+                        Funcionários
+                    </span>
+
+                </a>
+
+            </div>
+
             {% endif %}
+
         </nav>
+
+
+        <!-- =================================================
+             SIDEBAR FOOTER
+        ================================================== -->
+
+        <div
+            class="
+                shrink-0
+                border-t
+                border-zinc-200/60
+                p-3
+            "
+        >
+
+            <div
+                class="
+                    flex
+                    items-center
+                    gap-3
+                    rounded-xl
+                    p-2
+                "
+            >
+
+                <!-- Avatar -->
+
+                <div
+                    class="
+                        flex
+                        h-9
+                        w-9
+                        shrink-0
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-gradient-to-br
+                        from-zinc-800
+                        to-zinc-950
+                        text-xs
+                        font-semibold
+                        text-white
+                    "
+                >
+                    {{ request.user.get_full_name|first|upper }}
+                </div>
+
+
+                <div
+                    data-sidebar-text
+                    class="
+                        min-w-0
+                        flex-1
+                        transition-all
+                        duration-200
+                    "
+                >
+
+                    <p
+                        class="
+                            truncate
+                            text-xs
+                            font-medium
+                            text-zinc-900
+                        "
+                    >
+                        {{ request.user.get_full_name }}
+                    </p>
+
+                    <p
+                        class="
+                            truncate
+                            text-[11px]
+                            text-zinc-400
+                        "
+                    >
+                        {{ request.user.tenant.name }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </aside>
 
-    <div class="flex-1 flex flex-col min-w-0">
-        <!-- Topbar -->
-        <header class="h-16 border-b border-zinc-200 bg-white flex items-center justify-between px-4 md:px-6">
-            <span class="md:hidden font-semibold">SaaS Vendedor</span>
-            <div class="flex-1"></div>
-            <div class="flex items-center gap-4">
-                <div class="text-right hidden sm:block">
-                    <p class="text-sm font-medium text-zinc-900">{{ request.user.get_full_name }}</p>
-                    <p class="text-xs text-zinc-500">{{ request.user.tenant.name }}</p>
+
+    <!-- =====================================================
+         MAIN AREA
+    ====================================================== -->
+
+    <div
+        id="app-main"
+        class="
+            min-h-screen
+            w-full
+            transition-[padding]
+            duration-300
+            ease-out
+            md:pl-64
+        "
+    >
+
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
+
+        <header
+            class="
+                sticky
+                top-0
+                z-30
+                h-16
+                border-b
+                border-white/70
+                bg-white/60
+                backdrop-blur-2xl
+                backdrop-saturate-150
+            "
+        >
+
+            <div
+                class="
+                    flex
+                    h-full
+                    items-center
+                    justify-between
+                    px-4
+                    md:px-6
+                "
+            >
+
+                <!-- Mobile menu -->
+
+                <button
+                    id="mobile-menu-button"
+                    type="button"
+                    aria-label="Abrir menu"
+                    class="
+                        flex
+                        h-9
+                        w-9
+                        items-center
+                        justify-center
+                        rounded-xl
+                        text-zinc-500
+                        transition
+                        hover:bg-white
+                        hover:text-zinc-900
+                        md:hidden
+                    "
+                >
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.8"
+                        stroke="currentColor"
+                        class="h-5 w-5"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
+                        />
+                    </svg>
+
+                </button>
+
+
+                <!-- Desktop breadcrumb/title -->
+
+                <div class="hidden md:block">
+
+                    <p
+                        class="
+                            text-sm
+                            font-medium
+                            text-zinc-500
+                        "
+                    >
+                        {% block page_context %}
+                            Área administrativa
+                        {% endblock %}
+                    </p>
+
                 </div>
-                <form method="post" action="{% url 'accounts:logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="text-sm font-medium text-zinc-500 hover:text-zinc-900">Sair</button>
-                </form>
+
+
+                <div class="flex-1"></div>
+
+
+                <!-- User -->
+
+                <div class="flex items-center gap-3">
+
+                    <div class="hidden text-right sm:block">
+
+                        <p
+                            class="
+                                text-sm
+                                font-medium
+                                text-zinc-900
+                            "
+                        >
+                            {{ request.user.get_full_name }}
+                        </p>
+
+                        <p
+                            class="
+                                text-[11px]
+                                text-zinc-400
+                            "
+                        >
+                            {{ request.user.tenant.name }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- User avatar -->
+
+                    <div
+                        class="
+                            flex
+                            h-9
+                            w-9
+                            items-center
+                            justify-center
+                            rounded-full
+                            bg-zinc-900
+                            text-xs
+                            font-semibold
+                            text-white
+                        "
+                    >
+                        {{ request.user.get_full_name|first|upper }}
+                    </div>
+
+
+                    <!-- Logout -->
+
+                    <form
+                        method="post"
+                        action="{% url 'accounts:logout' %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="
+                                hidden
+                                rounded-lg
+                                px-3
+                                py-2
+                                text-xs
+                                font-medium
+                                text-zinc-500
+                                transition
+                                hover:bg-white
+                                hover:text-zinc-900
+                                sm:block
+                            "
+                        >
+                            Sair
+                        </button>
+
+                    </form>
+
+                </div>
+
             </div>
+
         </header>
 
-        <main class="flex-1 p-4 md:p-8">
-            {% include 'partials/_messages.html' %}
-            {% block app_content %}{% endblock %}
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <main
+            class="
+                min-h-[calc(100vh-4rem)]
+                p-4
+                md:p-6
+                lg:p-8
+            "
+        >
+
+            <div class="mx-auto max-w-[1600px]">
+
+                {% include 'partials/_messages.html' %}
+
+                {% block app_content %}{% endblock %}
+
+            </div>
+
         </main>
+
     </div>
+
 </div>
+
+
+<!-- =========================================================
+     SIDEBAR STYLES
+========================================================== -->
+
+<style>
+
+    /* =====================================================
+       NAV ITEM
+    ====================================================== */
+
+    .sidebar-link {
+        position: relative;
+
+        display: flex;
+
+        height: 42px;
+
+        align-items: center;
+
+        gap: 12px;
+
+        border-radius: 12px;
+
+        padding: 0 12px;
+
+        color: #71717a;
+
+        font-size: 0.875rem;
+
+        font-weight: 500;
+
+        white-space: nowrap;
+
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+    }
+
+
+    .sidebar-link:hover {
+        background: rgba(255, 255, 255, 0.75);
+
+        color: #18181b;
+
+        transform: translateX(2px);
+    }
+
+
+    .sidebar-link:active {
+        transform: scale(0.98);
+    }
+
+
+    .sidebar-icon {
+        width: 19px;
+        height: 19px;
+
+        flex-shrink: 0;
+
+        transition:
+            transform 0.2s ease,
+            color 0.2s ease;
+    }
+
+
+    .sidebar-link:hover .sidebar-icon {
+        transform: scale(1.08);
+    }
+
+
+    /* =====================================================
+       COLLAPSED SIDEBAR
+    ====================================================== */
+
+    #app-layout.sidebar-collapsed #app-sidebar {
+        width: 72px;
+    }
+
+
+    #app-layout.sidebar-collapsed #app-main {
+        padding-left: 72px;
+    }
+
+
+    #app-layout.sidebar-collapsed [data-sidebar-text] {
+        width: 0;
+
+        max-width: 0;
+
+        overflow: hidden;
+
+        opacity: 0;
+
+        pointer-events: none;
+    }
+
+
+    #app-layout.sidebar-collapsed .sidebar-link {
+        justify-content: center;
+
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+
+    #app-layout.sidebar-collapsed .sidebar-link:hover {
+        transform: none;
+    }
+
+
+    #app-layout.sidebar-collapsed #sidebar-toggle-icon {
+        transform: rotate(180deg);
+    }
+
+
+    /* =====================================================
+       TOOLTIPS
+    ====================================================== */
+
+    #app-layout.sidebar-collapsed .sidebar-link::after {
+        content: attr(data-tooltip);
+
+        position: absolute;
+
+        left: calc(100% + 10px);
+
+        top: 50%;
+
+        transform:
+            translateY(-50%)
+            translateX(-4px);
+
+        z-index: 100;
+
+        pointer-events: none;
+
+        white-space: nowrap;
+
+        border-radius: 8px;
+
+        background: #18181b;
+
+        padding: 6px 9px;
+
+        color: white;
+
+        font-size: 11px;
+
+        font-weight: 500;
+
+        opacity: 0;
+
+        box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.15);
+
+        transition:
+            opacity 0.15s ease,
+            transform 0.15s ease;
+    }
+
+
+    #app-layout.sidebar-collapsed .sidebar-link:hover::after {
+        opacity: 1;
+
+        transform:
+            translateY(-50%)
+            translateX(0);
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ====================================================== */
+
+    @media (max-width: 767px) {
+
+        #app-sidebar {
+            width: 280px;
+
+            box-shadow:
+                10px 0 40px rgba(0, 0, 0, 0.12);
+        }
+
+
+        #app-layout.mobile-sidebar-open #app-sidebar {
+            transform: translateX(0);
+        }
+
+
+        #app-layout.mobile-sidebar-open #sidebar-overlay {
+            display: block;
+        }
+
+
+        #app-layout.sidebar-collapsed #app-sidebar {
+            width: 280px;
+        }
+
+
+        #app-layout.sidebar-collapsed #app-main {
+            padding-left: 0;
+        }
+
+
+        #app-layout.sidebar-collapsed [data-sidebar-text] {
+            width: auto;
+
+            max-width: none;
+
+            opacity: 1;
+
+            pointer-events: auto;
+        }
+
+
+        #app-layout.sidebar-collapsed .sidebar-link {
+            justify-content: flex-start;
+
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+    }
+
+</style>
+
+
+<!-- =========================================================
+     SIDEBAR JAVASCRIPT
+========================================================== -->
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const layout =
+            document.getElementById('app-layout');
+
+        const sidebar =
+            document.getElementById('app-sidebar');
+
+        const toggleButton =
+            document.getElementById('sidebar-toggle');
+
+        const toggleIcon =
+            document.getElementById('sidebar-toggle-icon');
+
+        const mobileButton =
+            document.getElementById('mobile-menu-button');
+
+        const overlay =
+            document.getElementById('sidebar-overlay');
+
+
+        /* =================================================
+           DESKTOP STATE
+        ================================================== */
+
+        const savedState =
+            localStorage.getItem('sidebar-collapsed');
+
+        if (
+            savedState === 'true' &&
+            window.innerWidth >= 768
+        ) {
+            layout.classList.add(
+                'sidebar-collapsed'
+            );
+
+            toggleButton.setAttribute(
+                'aria-expanded',
+                'false'
+            );
+        }
+
+
+        /* =================================================
+           TOGGLE SIDEBAR
+        ================================================== */
+
+        function toggleSidebar() {
+
+            const collapsed =
+                layout.classList.toggle(
+                    'sidebar-collapsed'
+                );
+
+
+            localStorage.setItem(
+                'sidebar-collapsed',
+                collapsed
+            );
+
+
+            toggleButton.setAttribute(
+                'aria-expanded',
+                !collapsed
+            );
+
+
+            toggleButton.setAttribute(
+                'aria-label',
+                collapsed
+                    ? 'Expandir menu'
+                    : 'Recolher menu'
+            );
+
+        }
+
+
+        toggleButton.addEventListener(
+            'click',
+            toggleSidebar
+        );
+
+
+        /* =================================================
+           MOBILE OPEN
+        ================================================== */
+
+        function openMobileSidebar() {
+
+            layout.classList.add(
+                'mobile-sidebar-open'
+            );
+
+            document.body.classList.add(
+                'overflow-hidden'
+            );
+
+        }
+
+
+        function closeMobileSidebar() {
+
+            layout.classList.remove(
+                'mobile-sidebar-open'
+            );
+
+            document.body.classList.remove(
+                'overflow-hidden'
+            );
+
+        }
+
+
+        mobileButton.addEventListener(
+            'click',
+            openMobileSidebar
+        );
+
+
+        overlay.addEventListener(
+            'click',
+            closeMobileSidebar
+        );
+
+
+        /* =================================================
+           ESC
+        ================================================== */
+
+        document.addEventListener(
+            'keydown',
+            (event) => {
+
+                if (event.key === 'Escape') {
+                    closeMobileSidebar();
+                }
+
+            }
+        );
+
+
+        /* =================================================
+           CTRL + B
+        ================================================== */
+
+        document.addEventListener(
+            'keydown',
+            (event) => {
+
+                if (
+                    event.ctrlKey &&
+                    event.key.toLowerCase() === 'b'
+                ) {
+
+                    event.preventDefault();
+
+                    if (window.innerWidth >= 768) {
+                        toggleSidebar();
+                    }
+
+                }
+
+            }
+        );
+
+
+        /* =================================================
+           RESPONSIVE RESET
+        ================================================== */
+
+        window.addEventListener(
+            'resize',
+            () => {
+
+                if (window.innerWidth >= 768) {
+
+                    layout.classList.remove(
+                        'mobile-sidebar-open'
+                    );
+
+                    document.body.classList.remove(
+                        'overflow-hidden'
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+</script>
+
 {% endblock %}

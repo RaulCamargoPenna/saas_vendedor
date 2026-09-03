@@ -1,0 +1,259 @@
+{% extends 'app_base.html' %}
+
+{% block title %}
+    {% if object %}Editar funcionário{% else %}Novo funcionário{% endif %}
+{% endblock %}
+
+{% block app_content %}
+
+<!-- HEADER -->
+<div class="mb-8">
+
+    <div class="mb-2 flex items-center gap-2 text-sm text-zinc-400">
+        <a
+            href="{% url 'accounts:employee_list' %}"
+            class="transition-colors hover:text-zinc-700"
+        >
+            Funcionários
+        </a>
+
+        <svg
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+            />
+        </svg>
+
+        <span class="text-zinc-600">
+            {% if object %}Editar funcionário{% else %}Novo funcionário{% endif %}
+        </span>
+    </div>
+
+    <h1 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">
+        {% if object %}
+            {{ object.get_full_name }}
+        {% else %}
+            Novo funcionário
+        {% endif %}
+    </h1>
+
+    <p class="mt-1 text-sm text-zinc-500">
+        {% if object %}
+            Atualize os dados e as permissões deste funcionário.
+        {% else %}
+            Cadastre um funcionário e defina suas permissões.
+        {% endif %}
+    </p>
+
+</div>
+
+<!-- FORM -->
+<div class="max-w-3xl">
+
+    <form method="post" class="glass-card p-6 sm:p-8">
+
+        {% csrf_token %}
+
+        <!-- FORM ERRORS -->
+        {% if form.non_field_errors %}
+            <div class="mb-6 rounded-xl border border-red-200/70 bg-red-50/70 px-4 py-3 text-sm text-red-700">
+                {{ form.non_field_errors|join:', ' }}
+            </div>
+        {% endif %}
+
+        <!-- PERSONAL DATA -->
+        <div>
+
+            <div class="mb-5">
+                <h2 class="text-sm font-semibold text-zinc-900">
+                    Dados pessoais
+                </h2>
+
+                <p class="mt-1 text-xs text-zinc-500">
+                    Informações básicas do funcionário.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                <div>
+                    <label
+                        for="{{ form.first_name.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-zinc-800"
+                    >
+                        {{ form.first_name.label }}
+                    </label>
+
+                    {{ form.first_name }}
+
+                    {% if form.first_name.errors %}
+                        <p class="mt-1.5 text-xs text-red-600">
+                            {{ form.first_name.errors|join:', ' }}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label
+                        for="{{ form.last_name.id_for_label }}"
+                        class="mb-2 block text-sm font-medium text-zinc-800"
+                    >
+                        {{ form.last_name.label }}
+                    </label>
+
+                    {{ form.last_name }}
+
+                    {% if form.last_name.errors %}
+                        <p class="mt-1.5 text-xs text-red-600">
+                            {{ form.last_name.errors|join:', ' }}
+                        </p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="mt-5">
+
+                <label
+                    for="{{ form.email.id_for_label }}"
+                    class="mb-2 block text-sm font-medium text-zinc-800"
+                >
+                    {{ form.email.label }}
+                </label>
+
+                {{ form.email }}
+
+                {% if form.email.errors %}
+                    <p class="mt-1.5 text-xs text-red-600">
+                        {{ form.email.errors|join:', ' }}
+                    </p>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- ROLE -->
+        <div class="mt-8 border-t border-zinc-200/70 pt-8">
+
+            <div class="mb-5">
+                <h2 class="text-sm font-semibold text-zinc-900">
+                    Função
+                </h2>
+
+                <p class="mt-1 text-xs text-zinc-500">
+                    Defina a função do funcionário dentro da empresa.
+                </p>
+            </div>
+
+            <label
+                for="{{ form.role.id_for_label }}"
+                class="mb-2 block text-sm font-medium text-zinc-800"
+            >
+                {{ form.role.label }}
+            </label>
+
+            {{ form.role }}
+
+            {% if form.role.errors %}
+                <p class="mt-1.5 text-xs text-red-600">
+                    {{ form.role.errors|join:', ' }}
+                </p>
+            {% endif %}
+
+        </div>
+
+        <!-- PERMISSIONS -->
+        <div class="mt-8 border-t border-zinc-200/70 pt-8">
+
+            <div class="mb-5">
+                <h2 class="text-sm font-semibold text-zinc-900">
+                    Permissões de acesso
+                </h2>
+
+                <p class="mt-1 text-xs text-zinc-500">
+                    Defina quais funcionalidades o funcionário poderá acessar.
+                </p>
+            </div>
+
+            <div class="rounded-2xl border border-zinc-200/70 bg-white/50 p-4 sm:p-5">
+
+                <div class="space-y-2">
+
+                    {% for checkbox in form.feature_permissions %}
+
+                        <label class="group flex cursor-pointer items-center gap-3 rounded-xl border border-transparent px-3 py-3 transition-all duration-200 hover:border-zinc-200 hover:bg-white">
+
+                            {{ checkbox.tag }}
+
+                            <span class="text-sm text-zinc-700 group-hover:text-zinc-900">
+                                {{ checkbox.choice_label }}
+                            </span>
+
+                        </label>
+
+                    {% empty %}
+
+                        <p class="py-2 text-sm text-zinc-400">
+                            Nenhuma permissão disponível.
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            {% if form.feature_permissions.errors %}
+                <p class="mt-2 text-xs text-red-600">
+                    {{ form.feature_permissions.errors|join:', ' }}
+                </p>
+            {% endif %}
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="mt-8 flex flex-col-reverse gap-3 border-t border-zinc-200/70 pt-6 sm:flex-row sm:justify-end">
+
+            <a
+                href="{% url 'accounts:employee_list' %}"
+                class="btn-secondary justify-center"
+            >
+                Cancelar
+            </a>
+
+            <button
+                type="submit"
+                class="btn-primary justify-center"
+            >
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                    />
+                </svg>
+
+                Salvar alterações
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

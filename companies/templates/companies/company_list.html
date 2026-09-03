@@ -3,29 +3,216 @@
 {% block title %}Empresas{% endblock %}
 
 {% block app_content %}
-<div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-semibold tracking-tight">Empresas</h1>
-    <a href="{% url 'companies:create' %}" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800">Nova empresa</a>
-</div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    {% for company in companies %}
-    <a href="{% url 'companies:detail' company.pk %}" class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm hover:border-zinc-300 transition-colors">
-        <p class="font-medium text-zinc-900">{{ company.trade_name }}</p>
-        <p class="text-sm text-zinc-500">{{ company.legal_name }}</p>
-        <p class="mt-3 text-xs text-zinc-400">CNPJ: {{ company.cnpj }}</p>
-        <span class="mt-3 inline-block rounded-full bg-zinc-100 text-zinc-700 text-xs px-2 py-1">{{ company.business_area }}</span>
+<!-- HEADER -->
+<div class="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+        <div class="mb-2 flex items-center gap-2 text-sm text-zinc-500">
+            <span>Cadastros</span>
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                      d="m9 18 6-6-6-6"/>
+            </svg>
+            <span class="text-zinc-900">Empresas</span>
+        </div>
+
+        <h1 class="text-3xl font-semibold tracking-tight text-zinc-950">
+            Empresas
+        </h1>
+
+        <p class="mt-1 text-sm text-zinc-500">
+            Gerencie as empresas cadastradas no sistema.
+        </p>
+    </div>
+
+    <a
+        href="{% url 'companies:create' %}"
+        class="btn-primary inline-flex w-full items-center justify-center gap-2 sm:w-auto"
+    >
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v16m8-8H4"/>
+        </svg>
+        Nova empresa
     </a>
-    {% empty %}
-    <p class="text-sm text-zinc-500 col-span-full">Nenhuma empresa cadastrada ainda.</p>
-    {% endfor %}
 </div>
 
+<!-- COMPANY GRID -->
+{% if companies %}
+<div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+
+    {% for company in companies %}
+    <a
+        href="{% url 'companies:detail' company.pk %}"
+        class="glass-card group relative overflow-hidden p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+    >
+        <!-- Hover glow -->
+        <div class="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-zinc-200/30 blur-3xl transition-opacity duration-300 group-hover:opacity-100"></div>
+
+        <div class="relative">
+            <!-- Company header -->
+            <div class="flex items-start justify-between gap-4">
+                <div class="flex min-w-0 items-center gap-4">
+                    <div
+                        class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/70 bg-white/70 text-lg font-semibold text-zinc-700 shadow-sm backdrop-blur-xl"
+                    >
+                        {{ company.trade_name|first|upper }}
+                    </div>
+
+                    <div class="min-w-0">
+                        <h2 class="truncate font-semibold text-zinc-950 transition-colors group-hover:text-zinc-700">
+                            {{ company.trade_name }}
+                        </h2>
+
+                        <p class="mt-0.5 truncate text-sm text-zinc-500">
+                            {{ company.legal_name }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/60 text-zinc-400 opacity-0 shadow-sm transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="m9 18 6-6-6-6"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Company information -->
+            <div class="mt-6 space-y-3">
+                <div class="flex items-center gap-3 text-sm">
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100/80 text-zinc-500">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M3 10h18M5 10v9h14v-9M7 10V7a5 5 0 0 1 10 0v3"/>
+                        </svg>
+                    </div>
+
+                    <div class="min-w-0">
+                        <p class="text-xs text-zinc-400">CNPJ</p>
+                        <p class="truncate font-medium text-zinc-700">
+                            {{ company.cnpj }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 text-sm">
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-100/80 text-zinc-500">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                  d="M21 13.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h10.5M16 19l2 2 4-4"/>
+                        </svg>
+                    </div>
+
+                    <div class="min-w-0">
+                        <p class="text-xs text-zinc-400">Área de atuação</p>
+
+                        <span class="inline-flex max-w-full truncate rounded-full border border-zinc-200/80 bg-zinc-100/70 px-2.5 py-1 text-xs font-medium text-zinc-700">
+                            {{ company.business_area }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-6 flex items-center justify-between border-t border-zinc-200/60 pt-4">
+                <span class="text-xs text-zinc-400">
+                    Ver detalhes
+                </span>
+
+                <span class="flex items-center gap-1 text-xs font-medium text-zinc-600 transition-transform duration-300 group-hover:translate-x-1">
+                    Acessar
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                              d="M5 12h14m-6-6 6 6-6 6"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<!-- EMPTY STATE -->
+<div class="glass-card flex flex-col items-center justify-center px-6 py-16 text-center">
+    <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/70 bg-white/70 text-zinc-400 shadow-sm">
+        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"
+                  d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 9h.01M15 9h.01M9 12h.01M15 12h.01"/>
+        </svg>
+    </div>
+
+    <h2 class="mt-5 text-lg font-semibold text-zinc-900">
+        Nenhuma empresa cadastrada
+    </h2>
+
+    <p class="mt-2 max-w-md text-sm leading-6 text-zinc-500">
+        Cadastre sua primeira empresa para começar a gerenciar produtos,
+        vendas e operações.
+    </p>
+
+    <a
+        href="{% url 'companies:create' %}"
+        class="btn-primary mt-6 inline-flex items-center gap-2"
+    >
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v16m8-8H4"/>
+        </svg>
+        Cadastrar empresa
+    </a>
+</div>
+
+{% endif %}
+
+<!-- PAGINATION -->
 {% if is_paginated %}
-<div class="mt-6 flex items-center gap-2 text-sm">
-    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="text-zinc-500 hover:text-zinc-900">Anterior</a>{% endif %}
-    <span class="text-zinc-500">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="text-zinc-500 hover:text-zinc-900">Próxima</a>{% endif %}
+<div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+    <p class="text-sm text-zinc-500">
+        Página
+        <span class="font-medium text-zinc-700">{{ page_obj.number }}</span>
+        de
+        <span class="font-medium text-zinc-700">{{ page_obj.paginator.num_pages }}</span>
+    </p>
+
+    <div class="flex items-center gap-2">
+
+        {% if page_obj.has_previous %}
+        <a
+            href="?page={{ page_obj.previous_page_number }}"
+            class="inline-flex h-9 items-center gap-2 rounded-xl border border-zinc-200/80 bg-white/70 px-3 text-sm font-medium text-zinc-600 shadow-sm backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:bg-white hover:text-zinc-900 hover:shadow-md"
+        >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                      d="m15 18-6-6 6-6"/>
+            </svg>
+            <span class="hidden sm:inline">Anterior</span>
+        </a>
+        {% endif %}
+
+        <div class="flex h-9 min-w-9 items-center justify-center rounded-xl bg-zinc-900 px-3 text-sm font-medium text-white shadow-sm">
+            {{ page_obj.number }}
+        </div>
+
+        {% if page_obj.has_next %}
+        <a
+            href="?page={{ page_obj.next_page_number }}"
+            class="inline-flex h-9 items-center gap-2 rounded-xl border border-zinc-200/80 bg-white/70 px-3 text-sm font-medium text-zinc-600 shadow-sm backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:bg-white hover:text-zinc-900 hover:shadow-md"
+        >
+            <span class="hidden sm:inline">Próxima</span>
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                      d="m9 18 6-6-6-6"/>
+            </svg>
+        </a>
+        {% endif %}
+
+    </div>
 </div>
 {% endif %}
+
 {% endblock %}

@@ -3,16 +3,16 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
-from django.views.generic import FormView, ListView, TemplateView
+from django.views.generic import FormView, ListView, TemplateView, UpdateView
 
-from core.mixins import TenantAdminRequiredMixin
+from core.mixins import TenantAdminRequiredMixin, PermissionCodenameRequiredMixin
 from tenants.models import Tenant
 
-from .forms import EmailLoginForm, EmployeeCreationForm, SignUpForm
+from .forms import EmailLoginForm, EmployeeCreationForm, SignUpForm, EmployeeForm
 from .signals import build_activation_link, send_activation_email
 from .tokens import account_activation_token
 
@@ -136,3 +136,30 @@ class EmployeeCreateView(TenantAdminRequiredMixin, FormView):
         send_activation_email(user, activation_link)
         messages.success(self.request, f'Funcionário {user.email} cadastrado. Um e-mail de ativação foi enviado.')
         return super().form_valid(form)
+
+class EmployeeUpdateView(PermissionCodenameRequiredMixin, UpdateView):
+    model = User
+    form_class = EmployeeForm
+    template_name = 'accounts/employee_detail.html'
+    permission_codename = 'manage_employees'
+
+    def get_queryset(self):
+        return User.objects.filter(
+            tenant=self.request.user.tenant
+        )
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        messages.success(
+            self.request,
+            'Funcionário atualizado com sucesso.'
+        )
+
+        return response
+
+    def get_success_url(self):
+        return reverse(
+            'accounts:employee_update',
+            kwargs={'pk': self.object.pk}
+        )

@@ -35,6 +35,11 @@ class CompanyCreateView(PermissionCodenameRequiredMixin, TenantCreateMixin, Crea
     template_name = 'companies/company_form.html'
     success_url = reverse_lazy('companies:list')
     permission_codename = 'manage_companies'
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tenant'] = self.request.user.tenant
+        return kwargs
 
     def form_valid(self, form):
         response = super().form_valid(form)

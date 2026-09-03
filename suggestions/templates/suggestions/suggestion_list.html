@@ -3,28 +3,257 @@
 {% block title %}Sugestões de conexão{% endblock %}
 
 {% block app_content %}
-<div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-semibold tracking-tight">Sugestões de conexão</h1>
-    <form method="post" action="{% url 'suggestions:refresh' %}">
-        {% csrf_token %}
-        <button type="submit" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800">Buscar novas sugestões</button>
-    </form>
-</div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {% for suggestion in suggestions %}
-    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-        <p class="text-xs uppercase text-zinc-400 mb-2">Produto: {{ suggestion.product }}</p>
-        <p class="font-medium text-zinc-900">{{ suggestion.selling_company }}</p>
-        <p class="text-sm text-zinc-500">vende para</p>
-        <p class="font-medium text-zinc-900">{{ suggestion.buying_company }}</p>
-        <form method="post" action="{% url 'suggestions:discard' suggestion.pk %}" class="mt-4">
+<!-- HEADER -->
+<div class="mb-8">
+    <div class="mb-2 flex items-center gap-2 text-sm text-zinc-500">
+        <span>Sugestões</span>
+    </div>
+
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <h1 class="text-3xl font-semibold tracking-tight text-zinc-950">
+                Sugestões de conexão
+            </h1>
+
+            <p class="mt-1 text-sm text-zinc-500">
+                Possíveis oportunidades de conexão entre empresas e produtos.
+            </p>
+        </div>
+
+        <form method="post" action="{% url 'suggestions:refresh' %}">
             {% csrf_token %}
-            <button type="submit" class="text-xs text-zinc-500 hover:text-red-600">Descartar sugestão</button>
+
+            <button
+                type="submit"
+                class="btn-primary inline-flex w-full items-center justify-center gap-2 sm:w-auto"
+            >
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 4v5h5M20 20v-5h-5M5.5 15a7 7 0 0011.95 2.05L20 15M4 9l2.55-2.05A7 7 0 0118.5 9"
+                    />
+                </svg>
+
+                Buscar novas sugestões
+            </button>
         </form>
     </div>
-    {% empty %}
-    <p class="text-sm text-zinc-500 col-span-full">Nenhuma sugestão pendente no momento.</p>
-    {% endfor %}
 </div>
+
+<!-- SUGGESTIONS -->
+<div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+
+    {% for suggestion in suggestions %}
+
+    <div class="glass-card group p-6 transition duration-300 hover:-translate-y-0.5">
+
+        <!-- PRODUCT -->
+        <div class="mb-6 flex items-start gap-3">
+
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-500">
+                <svg
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M20 7l-8-4-8 4m16 0v10l-8 4-8-4V7m16 0l-8 4m0 0L4 7m8 4v10"
+                    />
+                </svg>
+            </div>
+
+            <div class="min-w-0">
+                <p class="text-xs font-medium uppercase tracking-wider text-zinc-400">
+                    Produto
+                </p>
+
+                <p class="mt-1 truncate text-sm font-semibold text-zinc-900">
+                    {{ suggestion.product }}
+                </p>
+            </div>
+
+        </div>
+
+        <!-- CONNECTION -->
+        <div class="rounded-2xl border border-zinc-200/70 bg-white/40 p-5">
+
+            <!-- SELLING COMPANY -->
+            <div class="flex items-center gap-3">
+
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-xs font-semibold text-white">
+                    {{ suggestion.selling_company.trade_name|first|upper }}
+                </div>
+
+                <div class="min-w-0">
+                    <p class="text-xs text-zinc-400">
+                        Empresa vendedora
+                    </p>
+
+                    <p class="truncate text-sm font-semibold text-zinc-900">
+                        {{ suggestion.selling_company }}
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- CONNECTION ARROW -->
+            <div class="my-3 ml-5 flex items-center gap-2">
+                <div class="h-5 border-l border-dashed border-zinc-300"></div>
+
+                <svg
+                    class="h-4 w-4 text-zinc-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M12 5v14m0 0l-4-4m4 4l4-4"
+                    />
+                </svg>
+
+                <span class="text-xs text-zinc-400">
+                    vende para
+                </span>
+            </div>
+
+            <!-- BUYING COMPANY -->
+            <div class="flex items-center gap-3">
+
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-xs font-semibold text-zinc-600">
+                    {{ suggestion.buying_company.trade_name|first|upper }}
+                </div>
+
+                <div class="min-w-0">
+                    <p class="text-xs text-zinc-400">
+                        Empresa compradora
+                    </p>
+
+                    <p class="truncate text-sm font-semibold text-zinc-900">
+                        {{ suggestion.buying_company }}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="mt-5 flex items-center justify-between">
+
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                Possível conexão
+            </span>
+
+            <form
+                method="post"
+                action="{% url 'suggestions:discard' suggestion.pk %}"
+            >
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-zinc-500 transition hover:bg-red-50 hover:text-red-600"
+                >
+                    <svg
+                        class="h-3.5 w-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.8"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+
+                    Descartar
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <!-- EMPTY STATE -->
+    <div class="glass-card col-span-full px-6 py-16 text-center">
+
+        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-400">
+            <svg
+                class="h-7 w-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.7"
+                    d="M8 12h8m-4-4v8m9-4a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+            </svg>
+        </div>
+
+        <h3 class="text-sm font-semibold text-zinc-900">
+            Nenhuma sugestão pendente
+        </h3>
+
+        <p class="mx-auto mt-1 max-w-sm text-sm text-zinc-500">
+            Não encontramos novas oportunidades de conexão no momento.
+        </p>
+
+        <form
+            method="post"
+            action="{% url 'suggestions:refresh' %}"
+            class="mt-5"
+        >
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="btn-primary inline-flex items-center justify-center gap-2"
+            >
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 4v5h5M20 20v-5h-5M5.5 15a7 7 0 0011.95 2.05L20 15M4 9l2.55-2.05A7 7 0 0118.5 9"
+                    />
+                </svg>
+
+                Buscar novas sugestões
+            </button>
+        </form>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
 {% endblock %}

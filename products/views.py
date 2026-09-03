@@ -45,6 +45,26 @@ class CategoryDeleteView(PermissionCodenameRequiredMixin, TenantQuerysetMixin, D
     template_name = 'products/category_confirm_delete.html'
     success_url = reverse_lazy('products:category_list')
     permission_codename = 'manage_products'
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        try:
+            self.object.delete()
+        except ProtectedError:
+            messages.error(
+                request,
+                'Não é possível excluir esta categoria pois existem vínculos a ele.'
+            )
+            return redirect(
+                'products:category_list',
+            )
+
+        messages.success(
+            request,
+            'Categoria excluída com sucesso.'
+        )
+        return redirect(self.success_url)
 
 
 class ProductListView(TenantQuerysetMixin, ListView):

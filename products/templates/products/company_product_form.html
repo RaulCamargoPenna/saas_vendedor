@@ -3,43 +3,282 @@
 {% block title %}Vincular produto — {{ company.trade_name }}{% endblock %}
 
 {% block app_content %}
-<h1 class="text-2xl font-semibold tracking-tight mb-1">Vincular produto</h1>
-<p class="text-sm text-zinc-500 mb-6">Empresa: {{ company.trade_name }}</p>
 
-<form method="post" class="max-w-xl rounded-lg border border-zinc-200 bg-white p-6 shadow-sm space-y-4">
+<!-- HEADER -->
+<div class="mb-8">
+
+    <div class="mb-2 flex items-center gap-2 text-sm text-zinc-400">
+        <a
+            href="{% url 'companies:detail' company.pk %}"
+            class="transition hover:text-zinc-700"
+        >
+            {{ company.trade_name }}
+        </a>
+
+        <svg
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+            />
+        </svg>
+
+        <span class="text-zinc-600">
+            Vincular produto
+        </span>
+    </div>
+
+    <h1 class="text-3xl font-semibold tracking-tight text-zinc-950">
+        Vincular produto
+    </h1>
+
+    <p class="mt-1 text-sm text-zinc-500">
+        Configure a relação deste produto com a empresa.
+    </p>
+
+</div>
+
+<!-- FORM -->
+<form
+    method="post"
+    class="glass-card max-w-2xl p-2"
+>
     {% csrf_token %}
+
+    <!-- COMPANY -->
+    <div class="mb-6 flex items-center gap-3 rounded-xl border border-zinc-200/70 bg-white/50 p-4">
+
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-sm font-semibold text-white">
+            {{ company.trade_name|first|upper }}
+        </div>
+
+        <div class="min-w-0">
+            <p class="text-xs font-medium uppercase tracking-wider text-zinc-400">
+                Empresa
+            </p>
+
+            <p class="truncate text-sm font-semibold text-zinc-900">
+                {{ company.trade_name }}
+            </p>
+        </div>
+
+    </div>
+
+    <!-- FORM ERRORS -->
     {% if form.non_field_errors %}
-        <div class="rounded-md border border-red-200 bg-red-50 text-red-700 text-sm px-4 py-3">{{ form.non_field_errors|join:', ' }}</div>
+
+        <div class="mb-6 rounded-xl border border-red-200/70 bg-red-50/70 px-4 py-3 text-sm text-red-700">
+
+            <div class="flex items-start gap-3">
+
+                <svg
+                    class="mt-0.5 h-5 w-5 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M12 9v4m0 4h.01M10.29 3.86l-7.3 12.65A2 2 0 004.72 19.5h14.56a2 2 0 001.73-2.99l-7.3-12.65a2 2 0 00-3.42 0z"
+                    />
+                </svg>
+
+                <div>
+                    {{ form.non_field_errors|join:', ' }}
+                </div>
+
+            </div>
+
+        </div>
+
     {% endif %}
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.product.label }}</label>
-        {{ form.product }}
-    </div>
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.relation_type.label }}</label>
-        {{ form.relation_type }}
-    </div>
-    <div id="buy-only-fields" class="space-y-4">
+
+    <!-- RELATION -->
+    <div class="space-y-5">
+
         <div>
-            <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.daily_avg_consumption.label }}</label>
+            <h2 class="text-sm font-semibold text-zinc-900">
+                Dados do vínculo
+            </h2>
+
+            <p class="mt-1 text-xs text-zinc-500">
+                Defina o produto e como a empresa se relaciona com ele.
+            </p>
+        </div>
+
+        <!-- PRODUCT -->
+        <div>
+            <label
+                for="{{ form.product.id_for_label }}"
+                class="mb-1.5 block text-sm font-medium text-zinc-700"
+            >
+                {{ form.product.label }}
+            </label>
+
+            {{ form.product }}
+
+            {% if form.product.errors %}
+                <p class="mt-1.5 text-xs text-red-600">
+                    {{ form.product.errors|join:', ' }}
+                </p>
+            {% endif %}
+        </div>
+
+        <!-- RELATION TYPE -->
+        <div>
+            <label
+                for="{{ form.relation_type.id_for_label }}"
+                class="mb-1.5 block text-sm font-medium text-zinc-700"
+            >
+                {{ form.relation_type.label }}
+            </label>
+
+            {{ form.relation_type }}
+
+            <p class="mt-1.5 text-xs text-zinc-400">
+                Escolha se a empresa vende ou compra este produto.
+            </p>
+
+            {% if form.relation_type.errors %}
+                <p class="mt-1.5 text-xs text-red-600">
+                    {{ form.relation_type.errors|join:', ' }}
+                </p>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- BUY ONLY FIELDS -->
+    <div
+        id="buy-only-fields"
+        class="mt-8 space-y-5 border-t border-zinc-200/70 pt-6"
+    >
+
+        <div>
+            <h2 class="text-sm font-semibold text-zinc-900">
+                Informações de compra
+            </h2>
+
+            <p class="mt-1 text-xs text-zinc-500">
+                Esses dados são utilizados para acompanhar o consumo e os alertas de reposição.
+            </p>
+        </div>
+
+        <!-- DAILY AVERAGE -->
+        <div>
+            <label
+                for="{{ form.daily_avg_consumption.id_for_label }}"
+                class="mb-1.5 block text-sm font-medium text-zinc-700"
+            >
+                {{ form.daily_avg_consumption.label }}
+            </label>
+
             {{ form.daily_avg_consumption }}
-            <p class="text-xs text-zinc-400 mt-1">Obrigatório quando a empresa compra este produto. Ex.: 5 unidades/dia.</p>
-            {% if form.daily_avg_consumption.errors %}<p class="text-xs text-red-600 mt-1">{{ form.daily_avg_consumption.errors|join:', ' }}</p>{% endif %}
+
+            <p class="mt-1.5 text-xs text-zinc-400">
+                Obrigatório quando a empresa compra este produto.
+                Ex.: 5 unidades/dia.
+            </p>
+
+            {% if form.daily_avg_consumption.errors %}
+                <p class="mt-1.5 text-xs text-red-600">
+                    {{ form.daily_avg_consumption.errors|join:', ' }}
+                </p>
+            {% endif %}
         </div>
+
+        <!-- LAST PURCHASE -->
         <div>
-            <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.last_purchase_quantity.label }}</label>
+            <label
+                for="{{ form.last_purchase_quantity.id_for_label }}"
+                class="mb-1.5 block text-sm font-medium text-zinc-700"
+            >
+                {{ form.last_purchase_quantity.label }}
+            </label>
+
             {{ form.last_purchase_quantity }}
-            <p class="text-xs text-zinc-400 mt-1">Quantidade comprada da última vez (usada para calcular o alerta de reposição). É atualizada automaticamente a cada nova venda registrada.</p>
+
+            <p class="mt-1.5 text-xs leading-relaxed text-zinc-400">
+                Quantidade comprada da última vez, usada para calcular o alerta
+                de reposição. É atualizada automaticamente a cada nova venda registrada.
+            </p>
+
+            {% if form.last_purchase_quantity.errors %}
+                <p class="mt-1.5 text-xs text-red-600">
+                    {{ form.last_purchase_quantity.errors|join:', ' }}
+                </p>
+            {% endif %}
         </div>
+
     </div>
-    <div>
-        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.last_movement_date.label }}</label>
+
+    <!-- LAST MOVEMENT -->
+    <div class="mt-8 border-t border-zinc-200/70 pt-6">
+
+        <label
+            for="{{ form.last_movement_date.id_for_label }}"
+            class="mb-1.5 block text-sm font-medium text-zinc-700"
+        >
+            {{ form.last_movement_date.label }}
+        </label>
+
         {{ form.last_movement_date }}
+
+        <p class="mt-1.5 text-xs text-zinc-400">
+            Data do último movimento registrado para este vínculo.
+        </p>
+
+        {% if form.last_movement_date.errors %}
+            <p class="mt-1.5 text-xs text-red-600">
+                {{ form.last_movement_date.errors|join:', ' }}
+            </p>
+        {% endif %}
+
     </div>
-    <div class="flex gap-3">
-        <button type="submit" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800">Salvar</button>
-        <a href="{% url 'companies:detail' company.pk %}" class="rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium hover:bg-zinc-50">Cancelar</a>
+
+    <!-- ACTIONS -->
+    <div class="mt-8 flex flex-col-reverse gap-3 border-t border-zinc-200/70 pt-6 sm:flex-row sm:justify-end">
+
+        <a
+            href="{% url 'companies:detail' company.pk %}"
+            class="btn-secondary inline-flex items-center justify-center"
+        >
+            Cancelar
+        </a>
+
+        <button
+            type="submit"
+            class="btn-primary inline-flex items-center justify-center gap-2"
+        >
+
+            <svg
+                class="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.8"
+                    d="M5 12h14m-7-7l7 7-7 7"
+                />
+            </svg>
+
+            Salvar vínculo
+
+        </button>
+
     </div>
+
 </form>
 
 <script>
@@ -48,7 +287,9 @@
         var buyFields = document.getElementById('buy-only-fields');
 
         function toggle() {
-            buyFields.style.display = relationField.value === 'buy' ? 'block' : 'none';
+            buyFields.style.display = relationField.value === 'buy'
+                ? 'block'
+                : 'none';
         }
 
         if (relationField && buyFields) {
@@ -57,4 +298,5 @@
         }
     })();
 </script>
+
 {% endblock %}

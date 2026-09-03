@@ -1,12 +1,100 @@
-{% comment %}
-Uso: {% include 'partials/_button.html' with label='Salvar' variant='primary' %}
-variant: primary | secondary | destructive
-type: submit | button (padrão: submit)
-{% endcomment %}
 {% if variant == 'secondary' %}
-<button type="{{ type|default:'submit' }}" class="rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium hover:bg-zinc-50 transition-colors">{{ label }}</button>
+
+<button
+    type="{{ type|default:'submit' }}"
+    class="
+        inline-flex
+        items-center
+        justify-center
+        gap-2
+        rounded-xl
+        border
+        border-zinc-200/80
+        bg-white/70
+        px-4
+        py-2.5
+        text-sm
+        font-medium
+        text-zinc-700
+        shadow-sm
+        backdrop-blur-xl
+        transition-all
+        duration-200
+        hover:-translate-y-0.5
+        hover:bg-white
+        hover:text-zinc-900
+        hover:shadow-md
+        active:translate-y-0
+        disabled:pointer-events-none
+        disabled:opacity-50
+    "
+>
+    {{ label }}
+</button>
+
+
 {% elif variant == 'destructive' %}
-<button type="{{ type|default:'submit' }}" class="rounded-md bg-red-600 text-white px-4 py-2 text-sm font-medium hover:bg-red-700 transition-colors">{{ label }}</button>
+
+<button
+    type="{{ type|default:'submit' }}"
+    class="
+        inline-flex
+        items-center
+        justify-center
+        gap-2
+        rounded-xl
+        border
+        border-red-600/20
+        bg-red-600
+        px-4
+        py-2.5
+        text-sm
+        font-medium
+        text-white
+        shadow-sm
+        transition-all
+        duration-200
+        hover:-translate-y-0.5
+        hover:bg-red-700
+        hover:shadow-lg
+        hover:shadow-red-600/20
+        active:translate-y-0
+        disabled:pointer-events-none
+        disabled:opacity-50
+    "
+>
+    {{ label }}
+</button>
+
+
 {% else %}
-<button type="{{ type|default:'submit' }}" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800 transition-colors">{{ label }}</button>
+
+<button
+    type="{{ type|default:'submit' }}"
+    class="
+        inline-flex
+        items-center
+        justify-center
+        gap-2
+        rounded-xl
+        bg-zinc-900
+        px-4
+        py-2.5
+        text-sm
+        font-medium
+        text-white
+        shadow-sm
+        transition-all
+        duration-200
+        hover:-translate-y-0.5
+        hover:bg-zinc-800
+        hover:shadow-lg
+        active:translate-y-0
+        disabled:pointer-events-none
+        disabled:opacity-50
+    "
+>
+    {{ label }}
+</button>
+
 {% endif %}

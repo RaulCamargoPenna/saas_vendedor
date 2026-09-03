@@ -69,7 +69,7 @@ SaleItemFormSet = inlineformset_factory(
     Sale,
     SaleItem,
     form=SaleItemForm,
-    extra=3,
+    extra=0,
     can_delete=True,
     min_num=1,
     validate_min=True,

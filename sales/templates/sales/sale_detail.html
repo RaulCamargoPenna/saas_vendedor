@@ -3,60 +3,468 @@
 {% block title %}Venda #{{ sale.pk }}{% endblock %}
 
 {% block app_content %}
-<div class="flex items-center justify-between mb-1">
-    <h1 class="text-2xl font-semibold tracking-tight">{{ sale.selling_company }} → {{ sale.buying_company }}</h1>
-    {% if sale.payment_confirmed %}
-        <span class="rounded-full bg-emerald-50 text-emerald-700 text-xs px-3 py-1">Pagamento confirmado</span>
-    {% elif sale.is_payment_overdue %}
-        <span class="rounded-full bg-red-50 text-red-700 text-xs px-3 py-1">Pagamento atrasado</span>
-    {% else %}
-        <span class="rounded-full bg-amber-50 text-amber-700 text-xs px-3 py-1">Pagamento pendente</span>
-    {% endif %}
-</div>
-<p class="text-sm text-zinc-500 mb-6">Venda realizada em {{ sale.sale_date|date:'d/m/Y' }} · Lançada em {{ sale.created_at|date:'d/m/Y H:i' }}</p>
 
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-        <p class="text-xs uppercase text-zinc-500">Valor da venda</p>
-        <p class="mt-2 text-2xl font-semibold">R$ {{ sale.sale_value }}</p>
+<!-- HEADER -->
+<div class="mb-8">
+    <div class="mb-3 flex items-center gap-2 text-sm text-zinc-500">
+        <a
+            href="{% url 'sales:list' %}"
+            class="transition hover:text-zinc-900"
+        >
+            Vendas
+        </a>
+
+        <svg
+            class="h-4 w-4 text-zinc-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+            />
+        </svg>
+
+        <span>Venda #{{ sale.pk }}</span>
     </div>
-    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-        <p class="text-xs uppercase text-zinc-500">Comissão ({{ sale.commission_percentage }}%)</p>
-        <p class="mt-2 text-2xl font-semibold">R$ {{ sale.commission_amount }}</p>
-    </div>
-    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-        <p class="text-xs uppercase text-zinc-500">Prazo de recebimento</p>
-        <p class="mt-2 text-2xl font-semibold">{{ sale.payment_due_date|date:'d/m/Y'|default:'—' }}</p>
+
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+
+        <div>
+            <div class="flex flex-wrap items-center gap-3">
+                <h1 class="text-3xl font-semibold tracking-tight text-zinc-950">
+                    {{ sale.selling_company }}
+                    <span class="font-normal text-zinc-400">→</span>
+                    {{ sale.buying_company }}
+                </h1>
+
+                {% if sale.payment_confirmed %}
+
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                        Pagamento confirmado
+                    </span>
+
+                {% elif sale.is_payment_overdue %}
+
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+                        <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                        Pagamento atrasado
+                    </span>
+
+                {% else %}
+
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/10">
+                        <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                        Pagamento pendente
+                    </span>
+
+                {% endif %}
+            </div>
+
+            <p class="mt-2 text-sm text-zinc-500">
+                Venda realizada em
+                <span class="font-medium text-zinc-600">
+                    {{ sale.sale_date|date:'d/m/Y' }}
+                </span>
+
+                <span class="mx-1 text-zinc-300">·</span>
+
+                Lançada em
+                <span class="font-medium text-zinc-600">
+                    {{ sale.created_at|date:'d/m/Y H:i' }}
+                </span>
+            </p>
+        </div>
+
     </div>
 </div>
 
+<!-- FINANCIAL SUMMARY -->
+<div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+
+    <!-- SALE VALUE -->
+    <div class="glass-card p-6">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                    Valor da venda
+                </p>
+
+                <p class="mt-2 text-2xl font-semibold tracking-tight text-zinc-950">
+                    R$ {{ sale.sale_value }}
+                </p>
+            </div>
+
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-600">
+                <svg
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M12 8c-2.21 0-4 1.12-4 2.5S9.79 13 12 13s4 1.12 4 2.5S14.21 18 12 18m0-10V6m0 12v-2"
+                    />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMMISSION -->
+    <div class="glass-card p-6">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                    Comissão
+                </p>
+
+                <p class="mt-2 text-2xl font-semibold tracking-tight text-zinc-950">
+                    R$ {{ sale.commission_amount }}
+                </p>
+
+                <p class="mt-1 text-xs text-zinc-500">
+                    {{ sale.commission_percentage }}% da venda
+                </p>
+            </div>
+
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                <svg
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M12 8c-2.21 0-4 1.12-4 2.5S9.79 13 12 13s4 1.12 4 2.5S14.21 18 12 18m0-10V6m0 12v-2"
+                    />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- DUE DATE -->
+    <div class="glass-card p-6">
+        <div class="flex items-start justify-between">
+            <div>
+                <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                    Prazo de recebimento
+                </p>
+
+                <p class="mt-2 text-2xl font-semibold tracking-tight text-zinc-950">
+                    {{ sale.payment_due_date|date:'d/m/Y'|default:'—' }}
+                </p>
+
+                <p class="mt-1 text-xs text-zinc-500">
+                    Data limite para recebimento
+                </p>
+            </div>
+
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                <svg
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M12 8v4l2.5 2.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- PAYMENT -->
 {% if not sale.payment_confirmed %}
-<form method="post" action="{% url 'sales:confirm_payment' sale.pk %}" class="mb-6">
-    {% csrf_token %}
-    <button type="submit" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800">Confirmar recebimento da comissão</button>
-</form>
+
+<div class="glass-card mb-6 overflow-hidden">
+
+    <div class="flex flex-col gap-5 p-6 sm:flex-row sm:items-center sm:justify-between">
+
+        <div class="flex items-start gap-4">
+
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                <svg
+                    class="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                        d="M12 8v4l2.5 2.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                </svg>
+            </div>
+
+            <div>
+                <h2 class="font-semibold text-zinc-950">
+                    Comissão aguardando recebimento
+                </h2>
+
+                <p class="mt-1 text-sm text-zinc-500">
+                    Confirme o recebimento da comissão quando o pagamento for realizado.
+                </p>
+            </div>
+
+        </div>
+
+        <form
+            method="post"
+            action="{% url 'sales:confirm_payment' sale.pk %}"
+            class="shrink-0"
+        >
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="btn-primary inline-flex w-full items-center justify-center gap-2 sm:w-auto"
+            >
+                <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                    />
+                </svg>
+
+                Confirmar recebimento
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
 {% else %}
-<p class="text-sm text-zinc-500 mb-6">Pagamento confirmado em {{ sale.payment_confirmed_at|date:'d/m/Y H:i' }}.</p>
+
+<div class="glass-card mb-6 border-emerald-200/60 bg-emerald-50/30">
+
+    <div class="flex items-start gap-4 p-6">
+
+        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
+            <svg
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                />
+            </svg>
+        </div>
+
+        <div>
+            <h2 class="font-semibold text-emerald-900">
+                Pagamento confirmado
+            </h2>
+
+            <p class="mt-1 text-sm text-emerald-700">
+                Comissão recebida em
+                {{ sale.payment_confirmed_at|date:'d/m/Y H:i' }}.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
 {% endif %}
 
-<div class="rounded-lg border border-zinc-200 bg-white shadow-sm overflow-hidden">
-    <table class="min-w-full divide-y divide-zinc-100">
-        <thead class="bg-zinc-50">
-            <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Produto</th>
-                <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Quantidade</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-zinc-100">
-            {% for item in sale.items.all %}
-            <tr>
-                <td class="px-4 py-3 text-sm text-zinc-900">{{ item.product }}</td>
-                <td class="px-4 py-3 text-sm text-zinc-500">{{ item.quantity }} {{ item.product.unit }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<!-- PRODUCTS -->
+<div class="glass-card overflow-hidden">
+
+    <div class="border-b border-white/60 px-6 py-5">
+        <h2 class="text-lg font-semibold text-zinc-950">
+            Produtos vendidos
+        </h2>
+
+        <p class="mt-1 text-sm text-zinc-500">
+            Produtos e quantidades associados a esta venda.
+        </p>
+    </div>
+
+    <!-- DESKTOP -->
+    <div class="hidden overflow-x-auto md:block">
+        <table class="min-w-full">
+            <thead>
+                <tr class="border-b border-white/60 bg-white/30">
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Produto
+                    </th>
+
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                        Quantidade
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y divide-white/50">
+
+                {% for item in sale.items.all %}
+
+                <tr class="transition hover:bg-white/40">
+
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+
+                            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-500">
+                                <svg
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="1.8"
+                                        d="M20 7l-8-4-8 4m16 0v10l-8 4-8-4V7m16 0l-8 4m0 0L4 7m8 4v10"
+                                    />
+                                </svg>
+                            </div>
+
+                            <span class="text-sm font-medium text-zinc-900">
+                                {{ item.product }}
+                            </span>
+
+                        </div>
+                    </td>
+
+                    <td class="px-6 py-4">
+                        <span class="text-sm text-zinc-700">
+                            {{ item.quantity }}
+                        </span>
+
+                        <span class="ml-1 text-xs text-zinc-400">
+                            {{ item.product.unit }}
+                        </span>
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="2" class="px-6 py-12 text-center">
+                        <p class="text-sm text-zinc-500">
+                            Nenhum produto associado a esta venda.
+                        </p>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- MOBILE -->
+    <div class="divide-y divide-white/50 md:hidden">
+
+        {% for item in sale.items.all %}
+
+        <div class="flex items-center justify-between gap-4 p-5">
+
+            <div class="flex min-w-0 items-center gap-3">
+
+                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-500">
+                    <svg
+                        class="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.8"
+                            d="M20 7l-8-4-8 4m16 0v10l-8 4-8-4V7m16 0l-8 4m0 0L4 7m8 4v10"
+                        />
+                    </svg>
+                </div>
+
+                <p class="truncate text-sm font-medium text-zinc-900">
+                    {{ item.product }}
+                </p>
+
+            </div>
+
+            <div class="shrink-0 text-right">
+                <p class="text-sm font-semibold text-zinc-900">
+                    {{ item.quantity }}
+                </p>
+
+                <p class="text-xs text-zinc-400">
+                    {{ item.product.unit }}
+                </p>
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="px-6 py-12 text-center">
+            <p class="text-sm text-zinc-500">
+                Nenhum produto associado a esta venda.
+            </p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
 </div>
 
-<a href="{% url 'sales:list' %}" class="mt-6 inline-block text-sm text-zinc-500 hover:text-zinc-900">← Voltar para vendas</a>
+<!-- BACK -->
+<div class="mt-6">
+    <a
+        href="{% url 'sales:list' %}"
+        class="inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition hover:text-zinc-900"
+    >
+        <svg
+            class="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 12H5m7 7l-7-7 7-7"
+            />
+        </svg>
+
+        Voltar para vendas
+    </a>
+</div>
+
 {% endblock %}

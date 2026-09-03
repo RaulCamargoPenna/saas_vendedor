@@ -1,37 +1,489 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="{% static 'images/icone.svg' %}"
+    >
+
     <title>{% block title %}SaaS Vendedor{% endblock %}</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        sans: [
+                            'Inter',
+                            'ui-sans-serif',
+                            'system-ui',
+                            'sans-serif'
+                        ],
                     },
+
+                    animation: {
+                        'fade-up': 'fadeUp 0.6s ease-out forwards',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'scale-in': 'scaleIn 0.5s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+                    },
+
+                    keyframes: {
+                        fadeUp: {
+                            '0%': {
+                                opacity: '0',
+                                transform: 'translateY(18px)'
+                            },
+                            '100%': {
+                                opacity: '1',
+                                transform: 'translateY(0)'
+                            }
+                        },
+
+                        fadeIn: {
+                            '0%': {
+                                opacity: '0'
+                            },
+                            '100%': {
+                                opacity: '1'
+                            }
+                        },
+
+                        scaleIn: {
+                            '0%': {
+                                opacity: '0',
+                                transform: 'scale(.96)'
+                            },
+                            '100%': {
+                                opacity: '1',
+                                transform: 'scale(1)'
+                            }
+                        },
+
+                        float: {
+                            '0%, 100%': {
+                                transform: 'translateY(0)'
+                            },
+                            '50%': {
+                                transform: 'translateY(-10px)'
+                            }
+                        },
+
+                        pulseSoft: {
+                            '0%, 100%': {
+                                opacity: '.35'
+                            },
+                            '50%': {
+                                opacity: '.65'
+                            }
+                        }
+                    },
+
+                    boxShadow: {
+                        'glass':
+                            '0 8px 40px rgba(0, 0, 0, 0.06)',
+
+                        'glass-hover':
+                            '0 16px 50px rgba(0, 0, 0, 0.10)',
+
+                        'button':
+                            '0 4px 14px rgba(0, 0, 0, 0.12)',
+                    }
                 },
             },
         };
     </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(99, 102, 241, 0.08),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 20%,
+                    rgba(168, 85, 247, 0.07),
+                    transparent 28%
+                ),
+                #fafafa;
+
+            color: #18181b;
+        }
+
+        /* =========================
+           LIQUID GLASS
+        ========================= */
+
+        .glass {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+
+            border: 1px solid rgba(255, 255, 255, 0.75);
+
+            box-shadow:
+                0 8px 40px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+
+            border: 1px solid rgba(255, 255, 255, 0.85);
+
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.07),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        /* =========================
+           GLASS CARD
+        ========================= */
+
+        .glass-card {
+            position: relative;
+            overflow: hidden;
+
+            background: rgba(255, 255, 255, 0.62);
+
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+
+            border: 1px solid rgba(255, 255, 255, 0.8);
+
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+        }
+
+        .glass-card::before {
+            content: '';
+
+            position: absolute;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255, 255, 255, 0.5),
+                    transparent 45%
+                );
+
+            pointer-events: none;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 18px 45px rgba(0, 0, 0, 0.09),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+            border-color: rgba(255, 255, 255, 1);
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 0.75rem;
+
+            background: #18181b;
+            color: white;
+
+            padding: 0.75rem 1.25rem;
+
+            font-size: 0.875rem;
+            font-weight: 600;
+
+            box-shadow:
+                0 4px 14px rgba(0, 0, 0, 0.12);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #27272a;
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.16);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 0.75rem;
+
+            background: rgba(255, 255, 255, 0.7);
+
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+
+            border: 1px solid rgba(228, 228, 231, 0.9);
+
+            color: #27272a;
+
+            padding: 0.75rem 1.25rem;
+
+            font-size: 0.875rem;
+            font-weight: 600;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.95);
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.07);
+        }
+
+        /* =========================
+           GLOW
+        ========================= */
+
+        .ambient-glow {
+            position: absolute;
+
+            width: 420px;
+            height: 420px;
+
+            border-radius: 9999px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(99, 102, 241, 0.12),
+                    transparent 70%
+                );
+
+            filter: blur(30px);
+
+            pointer-events: none;
+        }
+
+        /* =========================
+           COUNTER
+        ========================= */
+
+        [data-counter] {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* =========================
+           SCROLLBAR
+        ========================= */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d4d4d8;
+            border-radius: 999px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa;
+        }
+
+        /* =========================
+           ACCESSIBILITY
+        ========================= */
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
+
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-white text-zinc-900 antialiased">
+
+<body class="min-h-screen antialiased">
+
     {% block body %}
-    <div class="min-h-screen flex flex-col">
-        {% block content_wrapper %}
-        <main class="flex-1">
-            {% block content %}{% endblock %}
-        </main>
-        {% endblock %}
-    </div>
+
+        <div class="relative min-h-screen overflow-hidden">
+
+            <!-- Ambient background -->
+            <div class="ambient-glow -top-32 -left-32"></div>
+            <div class="ambient-glow top-1/3 -right-48"></div>
+
+            {% block content_wrapper %}
+
+                <main class="relative z-10 min-h-screen">
+                    {% block content %}{% endblock %}
+                </main>
+
+            {% endblock %}
+
+        </div>
+
     {% endblock %}
+
+
+    <!-- =========================
+         GLOBAL JAVASCRIPT
+    ========================== -->
+
+    <script>
+
+        /*
+         * Animated counters
+         *
+         * Usage:
+         *
+         * <span data-counter="1250">0</span>
+         *
+         * Optional:
+         *
+         * data-duration="1500"
+         */
+
+        function animateCounter(element) {
+
+            const target = Number(
+                element.dataset.counter || 0
+            );
+
+            const duration = Number(
+                element.dataset.duration || 1200
+            );
+
+            const start = performance.now();
+
+            function update(currentTime) {
+
+                const elapsed = currentTime - start;
+
+                const progress = Math.min(
+                    elapsed / duration,
+                    1
+                );
+
+                /*
+                 * Ease-out cubic
+                 */
+                const eased =
+                    1 - Math.pow(1 - progress, 3);
+
+                const value =
+                    Math.floor(target * eased);
+
+                element.textContent =
+                    value.toLocaleString('pt-BR');
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+
+        /*
+         * Start counters only when visible.
+         */
+
+        const counterObserver =
+            new IntersectionObserver(
+                (entries, observer) => {
+
+                    entries.forEach(entry => {
+
+                        if (!entry.isIntersecting) {
+                            return;
+                        }
+
+                        animateCounter(entry.target);
+
+                        observer.unobserve(entry.target);
+                    });
+
+                },
+                {
+                    threshold: 0.5
+                }
+            );
+
+
+        document
+            .querySelectorAll('[data-counter]')
+            .forEach(counter => {
+
+                counterObserver.observe(counter);
+
+            });
+
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
 </body>
 </html>

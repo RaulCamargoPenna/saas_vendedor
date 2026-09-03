@@ -3,85 +3,493 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block app_content %}
-<h1 class="text-2xl font-semibold tracking-tight mb-6">Olá, {{ request.user.get_short_name }}</h1>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-        <p class="text-xs uppercase text-zinc-500">Empresas cadastradas</p>
-        <p class="mt-2 text-3xl font-semibold">{{ companies_count }}</p>
-    </div>
-    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-        <p class="text-xs uppercase text-zinc-500">Vendas no mês</p>
-        <p class="mt-2 text-3xl font-semibold">{{ sales_this_month_count }}</p>
-    </div>
-    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-        <p class="text-xs uppercase text-zinc-500">Valor vendido no mês</p>
-        <p class="mt-2 text-3xl font-semibold">R$ {{ total_sale_value_month }}</p>
-    </div>
-    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-        <p class="text-xs uppercase text-zinc-500">Comissão a receber (mês)</p>
-        <p class="mt-2 text-3xl font-semibold">R$ {{ total_commission_month }}</p>
-    </div>
-</div>
+<div class="space-y-8">
 
-{% if pending_payments_count %}
-<div class="rounded-lg border border-red-200 bg-red-50 p-4 mb-8">
-    <p class="text-sm font-medium text-red-700">
-        {{ pending_payments_count }} pagamento(s) de comissão com prazo vencido e ainda não confirmado(s). Cobre os clientes responsáveis o quanto antes.
-    </p>
-    <div class="mt-3 divide-y divide-red-100">
-        {% for sale in pending_payments %}
-        <a href="{% url 'sales:detail' sale.pk %}" class="flex items-center justify-between py-2 text-sm text-red-700 hover:underline">
-            <span>{{ sale.selling_company }} → {{ sale.buying_company }}</span>
-            <span>Venceu em {{ sale.payment_due_date|date:'d/m/Y' }} · R$ {{ sale.commission_amount }}</span>
-        </a>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <div class="flex items-center gap-2 mb-2">
+                <span class="inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500">
+                    Visão geral
+                </span>
+            </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="rounded-lg border border-zinc-200 bg-white shadow-sm">
-        <div class="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
-            <h2 class="font-medium text-zinc-900">Alertas de reposição de estoque</h2>
-            {% comment %} <a href="{% url 'products:list' %}" class="text-xs text-zinc-500 hover:text-zinc-900">Ver produtos</a> {% endcomment %}
+            <h1 class="text-3xl font-semibold tracking-tight text-zinc-950 sm:text-4xl">
+                Olá, {{ request.user.get_short_name }}
+            </h1>
+
+            <p class="mt-2 text-sm text-zinc-500">
+                Aqui está um resumo do desempenho da sua operação.
+            </p>
         </div>
-        <div class="divide-y divide-zinc-100">
-            {% for alert in stock_alerts %}
-            <div class="px-6 py-4 flex items-center justify-between text-sm">
-                <div>
-                    <p class="font-medium text-zinc-900">{{ alert.relation.company }}</p>
-                    <p class="text-zinc-500">{{ alert.relation.product }}</p>
-                </div>
-                <div class="flex flex-col place-items-center py-1">
-                    <span class="rounded-full text-xs px-2 py-1
-                        {% if alert.days_left <= 0 %} bg-red-50 text-red-700 {% else %} bg-amber-50 text-amber-700 {% endif %}">
-                        {% if alert.days_left <= 0 %}Estoque esgotado{% else %}{{ alert.days_left }} dia(s) restante(s){% endif %}
+
+        <div class="hidden sm:flex items-center gap-2 rounded-full border border-zinc-200/70 bg-white/60 px-3 py-2 text-xs text-zinc-500 shadow-sm backdrop-blur-xl">
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+
+            <span>Resumo operacional</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+
+        {# Empresas #}
+        <div class="glass-card group relative overflow-hidden p-5">
+            <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-blue-500/5 blur-2xl transition-all duration-500 group-hover:bg-blue-500/10"></div>
+
+            <div class="relative">
+                <div class="flex items-start justify-between">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16M9 7h2m-2 4h2m-2 4h2m4-8h2m-2 4h2m-2 4h2"/>
+                        </svg>
+                    </div>
+
+                    <span class="text-xs font-medium text-zinc-400">
+                        Total
                     </span>
-                    <a href="{% url 'companies:detail' alert.relation.company.pk %}" class="text-xs text-zinc-500 hover:text-zinc-900">Ver Empresa</a>
+                </div>
+
+                <div class="mt-5">
+                    <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                        Empresas cadastradas
+                    </p>
+
+                    <p
+                        class="mt-1 text-3xl font-semibold tracking-tight text-zinc-950"
+                        data-counter="{{ companies_count }}"
+                    >
+                        0
+                    </p>
                 </div>
             </div>
-            {% empty %}
-            <p class="px-6 py-6 text-sm text-zinc-500">Nenhum alerta no momento.</p>
-            {% endfor %}
         </div>
+
+        <div class="glass-card group relative overflow-hidden p-5">
+            <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-500/5 blur-2xl transition-all duration-500 group-hover:bg-emerald-500/10"></div>
+
+            <div class="relative">
+                <div class="flex items-start justify-between">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M3 3v18h18M7 16l4-5 3 3 5-7"/>
+                        </svg>
+                    </div>
+
+                    <span class="text-xs font-medium text-emerald-600">
+                        Este mês
+                    </span>
+                </div>
+
+                <div class="mt-5">
+                    <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                        Vendas no mês
+                    </p>
+
+                    <p
+                        class="mt-1 text-3xl font-semibold tracking-tight text-zinc-950"
+                        data-counter="{{ sales_this_month_count }}"
+                    >
+                        0
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card group relative overflow-hidden p-5">
+            <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-violet-500/5 blur-2xl transition-all duration-500 group-hover:bg-violet-500/10"></div>
+
+            <div class="relative">
+                <div class="flex items-start justify-between">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M12 3v18m4-14.5c-.8-.6-2-.9-4-.9-2.8 0-4.5 1.1-4.5 3s1.7 2.8 4.5 3.4c2.8.6 4.5 1.4 4.5 3.5s-1.7 3.4-4.5 3.4c-2 0-3.4-.4-4.4-1.2"/>
+                        </svg>
+                    </div>
+
+                    <span class="text-xs font-medium text-violet-600">
+                        Este mês
+                    </span>
+                </div>
+
+                <div class="mt-5">
+                    <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                        Valor vendido
+                    </p>
+
+                    <p class="mt-1 text-3xl font-semibold tracking-tight text-zinc-950">
+                        <span class="text-base font-medium text-zinc-400">R$</span>
+                        {{ total_sale_value_month }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card group relative overflow-hidden p-5">
+            <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-amber-500/5 blur-2xl transition-all duration-500 group-hover:bg-amber-500/10"></div>
+
+            <div class="relative">
+                <div class="flex items-start justify-between">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M12 8c-2.2 0-4 .9-4 2s1.8 2 4 2 4 .9 4 2-1.8 2-4 2m0-12v2m0 12v2M19 12a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+
+                    <span class="text-xs font-medium text-emerald-600">
+                        Pago
+                    </span>
+                </div>
+
+                <div class="mt-5">
+                    <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                        Comissão Recebida
+                    </p>
+
+                    <p class="mt-1 text-3xl font-semibold tracking-tight text-zinc-950">
+                        <span class="text-base font-medium text-zinc-400">R$</span>
+                        {{ total_commission_month }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card group relative overflow-hidden p-5">
+            <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-amber-500/5 blur-2xl transition-all duration-500 group-hover:bg-amber-500/10"></div>
+
+            <div class="relative">
+                <div class="flex items-start justify-between">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M12 8c-2.2 0-4 .9-4 2s1.8 2 4 2 4 .9 4 2-1.8 2-4 2m0-12v2m0 12v2M19 12a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+
+                    <span class="text-xs font-medium text-amber-600">
+                        A receber
+                    </span>
+                </div>
+
+                <div class="mt-5">
+                    <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                        Comissão a receber
+                    </p>
+
+                    <p class="mt-1 text-3xl font-semibold tracking-tight text-zinc-950">
+                        <span class="text-base font-medium text-zinc-400">R$</span>
+                        {{ total__pending_commission_month }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="rounded-lg border border-zinc-200 bg-white shadow-sm">
-        <div class="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
-            <h2 class="font-medium text-zinc-900">Sugestões de conexão</h2>
-            <a href="{% url 'suggestions:list' %}" class="text-xs text-zinc-500 hover:text-zinc-900">Ver todas</a>
-        </div>
-        <div class="divide-y divide-zinc-100">
-            {% for suggestion in recent_suggestions %}
-            <div class="px-6 py-4 text-sm">
-                <p class="font-medium text-zinc-900">{{ suggestion.selling_company }} → {{ suggestion.buying_company }}</p>
-                <p class="text-zinc-500">Produto: {{ suggestion.product }}</p>
+    {% if pending_payments_count %}
+    <section class="relative overflow-hidden rounded-2xl border border-red-200/70 bg-red-50/70 shadow-sm backdrop-blur-xl">
+
+        <div class="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-red-400/10 blur-3xl"></div>
+
+        <div class="relative p-5 sm:p-6">
+
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+
+                <div class="flex gap-4">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M12 9v4m0 4h.01M10.3 3.8L2.9 17a2 2 0 001.7 3h14.8a2 2 0 001.7-3L13.7 3.8a2 2 0 00-3.4 0z"/>
+                        </svg>
+                    </div>
+
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h2 class="font-semibold text-red-950">
+                                Pagamentos em atraso
+                            </h2>
+
+                            <span class="rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700">
+                                {{ pending_payments_count }}
+                            </span>
+                        </div>
+
+                        <p class="mt-1 text-sm text-red-700/80">
+                            Existem pagamentos de comissão vencidos e ainda não confirmados.
+                        </p>
+                    </div>
+                </div>
+
+                <span class="inline-flex w-fit rounded-full border border-red-200 bg-white/60 px-3 py-1 text-xs font-medium text-red-700">
+                    Requer atenção
+                </span>
+
             </div>
-            {% empty %}
-            <p class="px-6 py-6 text-sm text-zinc-500">Nenhuma sugestão pendente.</p>
-            {% endfor %}
+
+
+            <div class="mt-5 overflow-hidden rounded-xl border border-red-200/60 bg-white/50">
+
+                {% for sale in pending_payments %}
+                <a
+                    href="{% url 'sales:detail' sale.pk %}"
+                    class="group flex flex-col gap-2 border-b border-red-100/80 px-4 py-4 last:border-0 transition-colors hover:bg-white/70 sm:flex-row sm:items-center sm:justify-between"
+                >
+
+                    <div class="min-w-0">
+                        <p class="truncate text-sm font-medium text-zinc-900">
+                            {{ sale.selling_company }}
+                            <span class="mx-1 text-zinc-400">→</span>
+                            {{ sale.buying_company }}
+                        </p>
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Vencido em {{ sale.payment_due_date|date:'d/m/Y' }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-semibold text-zinc-900">
+                            R$ {{ sale.commission_amount }}
+                        </span>
+
+                        <svg
+                            class="h-4 w-4 text-zinc-400 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-zinc-700"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+
+                </a>
+                {% endfor %}
+
+            </div>
+
         </div>
+    </section>
+    {% endif %}
+
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+
+        <section class="glass-card overflow-hidden">
+
+            <div class="flex items-center justify-between border-b border-zinc-200/60 px-5 py-4 sm:px-6">
+
+                <div class="flex items-center gap-3">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                        <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h2 class="text-sm font-semibold text-zinc-900">
+                            Alertas de estoque
+                        </h2>
+
+                        <p class="mt-0.5 text-xs text-zinc-500">
+                            Produtos que precisam de atenção
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="divide-y divide-zinc-100/80">
+
+                {% for alert in stock_alerts %}
+
+                <div class="group flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-white/50 sm:px-6">
+
+                    <div class="min-w-0">
+                        <p class="truncate text-sm font-medium text-zinc-900">
+                            {{ alert.relation.company }}
+                        </p>
+
+                        <p class="mt-0.5 truncate text-xs text-zinc-500">
+                            {{ alert.relation.product }}
+                        </p>
+                    </div>
+
+
+                    <div class="flex shrink-0 flex-col items-end gap-1.5">
+
+                        {% if alert.days_left <= 0 %}
+
+                        <span class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-700">
+                            <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                            Estoque esgotado
+                        </span>
+
+                        {% else %}
+
+                        <span class="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700">
+                            <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                            {{ alert.days_left }} dia(s)
+                        </span>
+
+                        {% endif %}
+
+                        <a
+                            href="{% url 'companies:detail' alert.relation.company.pk %}"
+                            class="text-[11px] font-medium text-zinc-400 transition-colors hover:text-zinc-900"
+                        >
+                            Ver empresa
+                        </a>
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="flex flex-col items-center justify-center px-6 py-12 text-center">
+
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+
+                    <p class="mt-3 text-sm font-medium text-zinc-900">
+                        Tudo em ordem
+                    </p>
+
+                    <p class="mt-1 text-xs text-zinc-500">
+                        Nenhum alerta de estoque no momento.
+                    </p>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <section class="glass-card overflow-hidden">
+
+            <div class="flex items-center justify-between border-b border-zinc-200/60 px-5 py-4 sm:px-6">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
+                        <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M9.5 14.5L14.5 9.5M7 19a4 4 0 01-4-4c0-2.2 1.8-4 4-4h1m5-6h3a4 4 0 010 8h-1"/>
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h2 class="text-sm font-semibold text-zinc-900">
+                            Sugestões de conexão
+                        </h2>
+
+                        <p class="mt-0.5 text-xs text-zinc-500">
+                            Oportunidades identificadas
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="{% url 'suggestions:list' %}"
+                    class="group inline-flex items-center gap-1 text-xs font-medium text-zinc-500 transition-colors hover:text-zinc-950"
+                >
+                    Ver todas
+
+                    <svg
+                        class="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+
+            </div>
+
+
+            <div class="divide-y divide-zinc-100/80">
+
+                {% for suggestion in recent_suggestions %}
+
+                <div class="group px-5 py-4 transition-colors hover:bg-white/50 sm:px-6">
+
+                    <div class="flex items-start gap-3">
+
+                        <div class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500">
+                            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+
+                        <div class="min-w-0">
+                            <p class="text-sm font-medium text-zinc-900">
+                                {{ suggestion.selling_company }}
+
+                                <span class="mx-1 text-zinc-400">→</span>
+
+                                {{ suggestion.buying_company }}
+                            </p>
+
+                            <p class="mt-1 text-xs text-zinc-500">
+                                Produto:
+                                <span class="font-medium text-zinc-700">
+                                    {{ suggestion.product }}
+                                </span>
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="flex flex-col items-center justify-center px-6 py-12 text-center">
+
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-500">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M8 12h8m-4-4v8m8-4a8 8 0 11-16 0 8 8 0 0116 0z"/>
+                        </svg>
+                    </div>
+
+                    <p class="mt-3 text-sm font-medium text-zinc-900">
+                        Nenhuma sugestão
+                    </p>
+
+                    <p class="mt-1 text-xs text-zinc-500">
+                        Nenhuma sugestão de conexão pendente.
+                    </p>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
     </div>
+
 </div>
+
 {% endblock %}
