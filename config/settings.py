@@ -129,14 +129,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # E-mail: durante o desenvolvimento os e-mails de ativação são exibidos no
 # console. Para produção, configure um backend SMTP real.
-if ENVIRONMENT == 'production':
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = os.getenv("EMAIL_PORT")
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.getenv("EMAIL_HOST")
-    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
-    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'contato@saasvendedor.com.br'
+# if ENVIRONMENT == 'production':
+#     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#     EMAIL_HOST = 'smtp.gmail.com'
+#     EMAIL_PORT = os.getenv("EMAIL_PORT")
+#     EMAIL_USE_TLS = True
+#     EMAIL_HOST_USER = os.getenv("EMAIL_HOST")
+#     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
+#     DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# else:
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'contato@saasvendedor.com.br'
