@@ -13,9 +13,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-change-this-secret-key-before-deploying-to-production'
 
-DEBUG = True if ENVIRONMENT == 'development' else False
+DEBUG = True if ENVIRONMENT == 'development' else True
 
 ALLOWED_HOSTS = [
+    "localhost",
     "raulcamargo.com.br",
     "www.raulcamargo.com.br",
     "https://raulcamargo.com.br",
@@ -131,7 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 if ENVIRONMENT == 'production':
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
+    EMAIL_PORT = os.getenv("EMAIL_PORT")
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = os.getenv("EMAIL_HOST")
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
