@@ -1,0 +1,31 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Empresas{% endblock %}
+
+{% block app_content %}
+<div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-semibold tracking-tight">Empresas</h1>
+    <a href="{% url 'companies:create' %}" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800">Nova empresa</a>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for company in companies %}
+    <a href="{% url 'companies:detail' company.pk %}" class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm hover:border-zinc-300 transition-colors">
+        <p class="font-medium text-zinc-900">{{ company.trade_name }}</p>
+        <p class="text-sm text-zinc-500">{{ company.legal_name }}</p>
+        <p class="mt-3 text-xs text-zinc-400">CNPJ: {{ company.cnpj }}</p>
+        <span class="mt-3 inline-block rounded-full bg-zinc-100 text-zinc-700 text-xs px-2 py-1">{{ company.business_area }}</span>
+    </a>
+    {% empty %}
+    <p class="text-sm text-zinc-500 col-span-full">Nenhuma empresa cadastrada ainda.</p>
+    {% endfor %}
+</div>
+
+{% if is_paginated %}
+<div class="mt-6 flex items-center gap-2 text-sm">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="text-zinc-500 hover:text-zinc-900">Anterior</a>{% endif %}
+    <span class="text-zinc-500">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="text-zinc-500 hover:text-zinc-900">Próxima</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

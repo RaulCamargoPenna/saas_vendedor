@@ -1,0 +1,7 @@
+Olá {{ user.get_short_name }},
+
+Sua conta no SaaS Vendedor foi criada. Para ativá-la, acesse o link abaixo:
+
+{{ activation_link }}
+
+Se você não reconhece esta solicitação, ignore este e-mail.

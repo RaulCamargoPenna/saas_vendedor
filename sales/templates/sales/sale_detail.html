@@ -1,0 +1,62 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Venda #{{ sale.pk }}{% endblock %}
+
+{% block app_content %}
+<div class="flex items-center justify-between mb-1">
+    <h1 class="text-2xl font-semibold tracking-tight">{{ sale.selling_company }} → {{ sale.buying_company }}</h1>
+    {% if sale.payment_confirmed %}
+        <span class="rounded-full bg-emerald-50 text-emerald-700 text-xs px-3 py-1">Pagamento confirmado</span>
+    {% elif sale.is_payment_overdue %}
+        <span class="rounded-full bg-red-50 text-red-700 text-xs px-3 py-1">Pagamento atrasado</span>
+    {% else %}
+        <span class="rounded-full bg-amber-50 text-amber-700 text-xs px-3 py-1">Pagamento pendente</span>
+    {% endif %}
+</div>
+<p class="text-sm text-zinc-500 mb-6">Venda realizada em {{ sale.sale_date|date:'d/m/Y' }} · Lançada em {{ sale.created_at|date:'d/m/Y H:i' }}</p>
+
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
+        <p class="text-xs uppercase text-zinc-500">Valor da venda</p>
+        <p class="mt-2 text-2xl font-semibold">R$ {{ sale.sale_value }}</p>
+    </div>
+    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
+        <p class="text-xs uppercase text-zinc-500">Comissão ({{ sale.commission_percentage }}%)</p>
+        <p class="mt-2 text-2xl font-semibold">R$ {{ sale.commission_amount }}</p>
+    </div>
+    <div class="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
+        <p class="text-xs uppercase text-zinc-500">Prazo de recebimento</p>
+        <p class="mt-2 text-2xl font-semibold">{{ sale.payment_due_date|date:'d/m/Y'|default:'—' }}</p>
+    </div>
+</div>
+
+{% if not sale.payment_confirmed %}
+<form method="post" action="{% url 'sales:confirm_payment' sale.pk %}" class="mb-6">
+    {% csrf_token %}
+    <button type="submit" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800">Confirmar recebimento da comissão</button>
+</form>
+{% else %}
+<p class="text-sm text-zinc-500 mb-6">Pagamento confirmado em {{ sale.payment_confirmed_at|date:'d/m/Y H:i' }}.</p>
+{% endif %}
+
+<div class="rounded-lg border border-zinc-200 bg-white shadow-sm overflow-hidden">
+    <table class="min-w-full divide-y divide-zinc-100">
+        <thead class="bg-zinc-50">
+            <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Produto</th>
+                <th class="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">Quantidade</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-100">
+            {% for item in sale.items.all %}
+            <tr>
+                <td class="px-4 py-3 text-sm text-zinc-900">{{ item.product }}</td>
+                <td class="px-4 py-3 text-sm text-zinc-500">{{ item.quantity }} {{ item.product.unit }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<a href="{% url 'sales:list' %}" class="mt-6 inline-block text-sm text-zinc-500 hover:text-zinc-900">← Voltar para vendas</a>
+{% endblock %}

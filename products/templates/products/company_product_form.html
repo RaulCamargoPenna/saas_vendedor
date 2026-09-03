@@ -1,0 +1,60 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Vincular produto — {{ company.trade_name }}{% endblock %}
+
+{% block app_content %}
+<h1 class="text-2xl font-semibold tracking-tight mb-1">Vincular produto</h1>
+<p class="text-sm text-zinc-500 mb-6">Empresa: {{ company.trade_name }}</p>
+
+<form method="post" class="max-w-xl rounded-lg border border-zinc-200 bg-white p-6 shadow-sm space-y-4">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div class="rounded-md border border-red-200 bg-red-50 text-red-700 text-sm px-4 py-3">{{ form.non_field_errors|join:', ' }}</div>
+    {% endif %}
+    <div>
+        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.product.label }}</label>
+        {{ form.product }}
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.relation_type.label }}</label>
+        {{ form.relation_type }}
+    </div>
+    <div id="buy-only-fields" class="space-y-4">
+        <div>
+            <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.daily_avg_consumption.label }}</label>
+            {{ form.daily_avg_consumption }}
+            <p class="text-xs text-zinc-400 mt-1">Obrigatório quando a empresa compra este produto. Ex.: 5 unidades/dia.</p>
+            {% if form.daily_avg_consumption.errors %}<p class="text-xs text-red-600 mt-1">{{ form.daily_avg_consumption.errors|join:', ' }}</p>{% endif %}
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.last_purchase_quantity.label }}</label>
+            {{ form.last_purchase_quantity }}
+            <p class="text-xs text-zinc-400 mt-1">Quantidade comprada da última vez (usada para calcular o alerta de reposição). É atualizada automaticamente a cada nova venda registrada.</p>
+        </div>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-zinc-700 mb-1">{{ form.last_movement_date.label }}</label>
+        {{ form.last_movement_date }}
+    </div>
+    <div class="flex gap-3">
+        <button type="submit" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800">Salvar</button>
+        <a href="{% url 'companies:detail' company.pk %}" class="rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium hover:bg-zinc-50">Cancelar</a>
+    </div>
+</form>
+
+<script>
+    (function () {
+        var relationField = document.getElementById('id_relation_type');
+        var buyFields = document.getElementById('buy-only-fields');
+
+        function toggle() {
+            buyFields.style.display = relationField.value === 'buy' ? 'block' : 'none';
+        }
+
+        if (relationField && buyFields) {
+            relationField.addEventListener('change', toggle);
+            toggle();
+        }
+    })();
+</script>
+{% endblock %}

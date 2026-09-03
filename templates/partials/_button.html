@@ -1,0 +1,12 @@
+{% comment %}
+Uso: {% include 'partials/_button.html' with label='Salvar' variant='primary' %}
+variant: primary | secondary | destructive
+type: submit | button (padrão: submit)
+{% endcomment %}
+{% if variant == 'secondary' %}
+<button type="{{ type|default:'submit' }}" class="rounded-md border border-zinc-200 bg-white px-4 py-2 text-sm font-medium hover:bg-zinc-50 transition-colors">{{ label }}</button>
+{% elif variant == 'destructive' %}
+<button type="{{ type|default:'submit' }}" class="rounded-md bg-red-600 text-white px-4 py-2 text-sm font-medium hover:bg-red-700 transition-colors">{{ label }}</button>
+{% else %}
+<button type="{{ type|default:'submit' }}" class="rounded-md bg-zinc-900 text-white px-4 py-2 text-sm font-medium hover:bg-zinc-800 transition-colors">{{ label }}</button>
+{% endif %}
