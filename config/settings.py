@@ -20,6 +20,8 @@ ALLOWED_HOSTS = [
     "www.raulcamargopenna.com.br",
     "https://raulcamargopenna.com.br",
     "https://www.raulcamargopenna.com.br",
+    "saas-vendedor.onrender.com",
+    "https://saas-vendedor.onrender.com/"
 ]
 
 INSTALLED_APPS = [
