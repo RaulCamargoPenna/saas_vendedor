@@ -6,10 +6,13 @@
 
 <div class="space-y-8">
 
+    <!-- HEADER -->
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+
         <div>
-            <div class="flex items-center gap-2 mb-2">
+            <div class="mb-2 flex items-center gap-2">
                 <span class="inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+
                 <span class="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500">
                     Visão geral
                 </span>
@@ -24,37 +27,220 @@
             </p>
         </div>
 
-        <div class="hidden sm:flex items-center gap-2 rounded-full border border-zinc-200/70 bg-white/60 px-3 py-2 text-xs text-zinc-500 shadow-sm backdrop-blur-xl">
-            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        <div class="hidden items-center gap-2 rounded-full border border-zinc-200/70 bg-white/60 px-3 py-2 text-xs text-zinc-500 shadow-sm backdrop-blur-xl sm:flex">
+            <svg
+                class="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.8"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
             </svg>
 
-            <span>Resumo operacional</span>
+            <span>
+                {{ start_date|date:'d/m/Y' }} — {{ end_date|date:'d/m/Y' }}
+            </span>
         </div>
+
     </div>
 
+
+    <!-- DATE FILTER -->
+    <section class="glass-card !p-4 sm:!p-5">
+
+        <form method="get" class="space-y-4">
+
+            <div class="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+
+                <div>
+                    <div class="flex items-center gap-3">
+
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-600 shadow-sm">
+                            <svg
+                                class="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                            </svg>
+                        </div>
+
+                        <div>
+                            <p class="text-sm font-semibold text-zinc-900">
+                                Período
+                            </p>
+
+                            <p class="mt-0.5 text-xs text-zinc-500">
+                                Filtre os indicadores de vendas
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+
+                    <div>
+                        <label
+                            for="start_date"
+                            class="mb-1.5 block text-xs font-medium text-zinc-600"
+                        >
+                            Data inicial
+                        </label>
+
+                        <input
+                            type="date"
+                            id="start_date"
+                            name="start_date"
+                            value="{{ start_date|date:'Y-m-d' }}"
+                            class="block w-full rounded-xl border border-zinc-200/80 bg-white/70 px-3 py-2.5 text-sm text-zinc-900 shadow-sm outline-none backdrop-blur-xl transition focus:border-zinc-400 focus:ring-2 focus:ring-zinc-900/5 sm:w-40"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label
+                            for="end_date"
+                            class="mb-1.5 block text-xs font-medium text-zinc-600"
+                        >
+                            Data final
+                        </label>
+
+                        <input
+                            type="date"
+                            id="end_date"
+                            name="end_date"
+                            value="{{ end_date|date:'Y-m-d' }}"
+                            class="block w-full rounded-xl border border-zinc-200/80 bg-white/70 px-3 py-2.5 text-sm text-zinc-900 shadow-sm outline-none backdrop-blur-xl transition focus:border-zinc-400 focus:ring-2 focus:ring-zinc-900/5 sm:w-40"
+                        >
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn-primary inline-flex items-center justify-center gap-2"
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M3 4h18M6 9h12m-9 5h6m-3 4v-4"
+                            />
+                        </svg>
+
+                        Aplicar
+                    </button>
+
+
+                    {% if request.GET.start_date or request.GET.end_date %}
+
+                    <a
+                        href="{% url 'dashboard:home' %}"
+                        class="btn-secondary inline-flex items-center justify-center"
+                    >
+                        Limpar
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK FILTERS -->
+            <div class="flex flex-wrap items-center gap-2 border-t border-zinc-200/60 pt-4">
+
+                <span class="mr-1 text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+                    Atalhos
+                </span>
+
+                <button
+                    type="button"
+                    data-period="month"
+                    class="period-button rounded-full border border-zinc-200/80 bg-white/60 px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:border-zinc-300 hover:bg-white hover:text-zinc-900"
+                >
+                    Este mês
+                </button>
+
+                <button
+                    type="button"
+                    data-period="30days"
+                    class="period-button rounded-full border border-zinc-200/80 bg-white/60 px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:border-zinc-300 hover:bg-white hover:text-zinc-900"
+                >
+                    Últimos 30 dias
+                </button>
+
+                <button
+                    type="button"
+                    data-period="year"
+                    class="period-button rounded-full border border-zinc-200/80 bg-white/60 px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:border-zinc-300 hover:bg-white hover:text-zinc-900"
+                >
+                    Este ano
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- KPI CARDS -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
 
-        {# Empresas #}
+        <!-- EMPRESAS -->
         <div class="glass-card group relative overflow-hidden p-5">
+
             <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-blue-500/5 blur-2xl transition-all duration-500 group-hover:bg-blue-500/10"></div>
 
             <div class="relative">
+
                 <div class="flex items-start justify-between">
+
                     <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16M9 7h2m-2 4h2m-2 4h2m4-8h2m-2 4h2m-2 4h2"/>
+                        <svg
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16M9 7h2m-2 4h2m-2 4h2m4-8h2m-2 4h2m-2 4h2"
+                            />
                         </svg>
                     </div>
 
                     <span class="text-xs font-medium text-zinc-400">
                         Total
                     </span>
+
                 </div>
 
+
                 <div class="mt-5">
+
                     <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
                         Empresas cadastradas
                     </p>
@@ -65,135 +251,230 @@
                     >
                         0
                     </p>
+
                 </div>
+
             </div>
+
         </div>
 
+
+        <!-- VENDAS -->
         <div class="glass-card group relative overflow-hidden p-5">
+
             <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-500/5 blur-2xl transition-all duration-500 group-hover:bg-emerald-500/10"></div>
 
             <div class="relative">
+
                 <div class="flex items-start justify-between">
+
                     <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M3 3v18h18M7 16l4-5 3 3 5-7"/>
+                        <svg
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M3 3v18h18M7 16l4-5 3 3 5-7"
+                            />
                         </svg>
                     </div>
 
                     <span class="text-xs font-medium text-emerald-600">
-                        Este mês
+                        Período
                     </span>
+
                 </div>
 
+
                 <div class="mt-5">
+
                     <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
-                        Vendas no mês
+                        Vendas no período
                     </p>
 
                     <p
                         class="mt-1 text-3xl font-semibold tracking-tight text-zinc-950"
-                        data-counter="{{ sales_this_month_count }}"
+                        data-counter="{{ sales_period_count }}"
                     >
                         0
                     </p>
+
                 </div>
+
             </div>
+
         </div>
 
+
+        <!-- VALOR VENDIDO -->
         <div class="glass-card group relative overflow-hidden p-5">
+
             <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-violet-500/5 blur-2xl transition-all duration-500 group-hover:bg-violet-500/10"></div>
 
             <div class="relative">
+
                 <div class="flex items-start justify-between">
+
                     <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M12 3v18m4-14.5c-.8-.6-2-.9-4-.9-2.8 0-4.5 1.1-4.5 3s1.7 2.8 4.5 3.4c2.8.6 4.5 1.4 4.5 3.5s-1.7 3.4-4.5 3.4c-2 0-3.4-.4-4.4-1.2"/>
+                        <svg
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 3v18m4-14.5c-.8-.6-2-.9-4-.9-2.8 0-4.5 1.1-4.5 3s1.7 2.8 4.5 3.4c2.8.6 4.5 1.4 4.5 3.5s-1.7 3.4-4.5 3.4c-2 0-3.4-.4-4.4-1.2"
+                            />
                         </svg>
                     </div>
 
                     <span class="text-xs font-medium text-violet-600">
-                        Este mês
+                        Período
                     </span>
+
                 </div>
 
+
                 <div class="mt-5">
+
                     <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
                         Valor vendido
                     </p>
 
                     <p class="mt-1 text-3xl font-semibold tracking-tight text-zinc-950">
-                        <span class="text-base font-medium text-zinc-400">R$</span>
-                        {{ total_sale_value_month }}
+                        <span class="text-base font-medium text-zinc-400">
+                            R$
+                        </span>
+
+                        {{ total_sale_value_period }}
                     </p>
+
                 </div>
+
             </div>
+
         </div>
 
+
+        <!-- COMISSÃO RECEBIDA -->
         <div class="glass-card group relative overflow-hidden p-5">
-            <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-amber-500/5 blur-2xl transition-all duration-500 group-hover:bg-amber-500/10"></div>
+
+            <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-500/5 blur-2xl transition-all duration-500 group-hover:bg-emerald-500/10"></div>
 
             <div class="relative">
+
                 <div class="flex items-start justify-between">
+
                     <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M12 8c-2.2 0-4 .9-4 2s1.8 2 4 2 4 .9 4 2-1.8 2-4 2m0-12v2m0 12v2M19 12a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        <svg
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 8c-2.2 0-4 .9-4 2s1.8 2 4 2 4 .9 4 2-1.8 2-4 2m0-12v2m0 12v2M19 12a7 7 0 11-14 0 7 7 0 0114 0z"
+                            />
                         </svg>
                     </div>
 
                     <span class="text-xs font-medium text-emerald-600">
                         Pago
                     </span>
+
                 </div>
 
+
                 <div class="mt-5">
+
                     <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
-                        Comissão Recebida
+                        Comissão recebida
                     </p>
 
                     <p class="mt-1 text-3xl font-semibold tracking-tight text-zinc-950">
-                        <span class="text-base font-medium text-zinc-400">R$</span>
-                        {{ total_commission_month }}
+                        <span class="text-base font-medium text-zinc-400">
+                            R$
+                        </span>
+
+                        {{ total_commission_period }}
                     </p>
+
                 </div>
+
             </div>
+
         </div>
 
+
+        <!-- COMISSÃO A RECEBER -->
         <div class="glass-card group relative overflow-hidden p-5">
+
             <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-amber-500/5 blur-2xl transition-all duration-500 group-hover:bg-amber-500/10"></div>
 
             <div class="relative">
+
                 <div class="flex items-start justify-between">
+
                     <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-200/70 bg-white/70 text-zinc-700 shadow-sm">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M12 8c-2.2 0-4 .9-4 2s1.8 2 4 2 4 .9 4 2-1.8 2-4 2m0-12v2m0 12v2M19 12a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        <svg
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 8c-2.2 0-4 .9-4 2s1.8 2 4 2 4 .9 4 2-1.8 2-4 2m0-12v2m0 12v2M19 12a7 7 0 11-14 0 7 7 0 0114 0z"
+                            />
                         </svg>
                     </div>
 
                     <span class="text-xs font-medium text-amber-600">
                         A receber
                     </span>
+
                 </div>
 
+
                 <div class="mt-5">
+
                     <p class="text-xs font-medium uppercase tracking-wider text-zinc-500">
                         Comissão a receber
                     </p>
 
                     <p class="mt-1 text-3xl font-semibold tracking-tight text-zinc-950">
-                        <span class="text-base font-medium text-zinc-400">R$</span>
-                        {{ total__pending_commission_month }}
+                        <span class="text-base font-medium text-zinc-400">
+                            R$
+                        </span>
+
+                        {{ total_pending_commission_period }}
                     </p>
+
                 </div>
+
             </div>
+
         </div>
 
     </div>
 
+
+    <!-- PAGAMENTOS EM ATRASO -->
     {% if pending_payments_count %}
+
     <section class="relative overflow-hidden rounded-2xl border border-red-200/70 bg-red-50/70 shadow-sm backdrop-blur-xl">
 
         <div class="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-red-400/10 blur-3xl"></div>
@@ -203,15 +484,28 @@
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 
                 <div class="flex gap-4">
+
                     <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M12 9v4m0 4h.01M10.3 3.8L2.9 17a2 2 0 001.7 3h14.8a2 2 0 001.7-3L13.7 3.8a2 2 0 00-3.4 0z"/>
+                        <svg
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 9v4m0 4h.01M10.3 3.8L2.9 17a2 2 0 001.7 3h14.8a2 2 0 001.7-3L13.7 3.8a2 2 0 00-3.4 0z"
+                            />
                         </svg>
                     </div>
 
+
                     <div>
+
                         <div class="flex flex-wrap items-center gap-2">
+
                             <h2 class="font-semibold text-red-950">
                                 Pagamentos em atraso
                             </h2>
@@ -219,13 +513,17 @@
                             <span class="rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700">
                                 {{ pending_payments_count }}
                             </span>
+
                         </div>
 
                         <p class="mt-1 text-sm text-red-700/80">
                             Existem pagamentos de comissão vencidos e ainda não confirmados.
                         </p>
+
                     </div>
+
                 </div>
+
 
                 <span class="inline-flex w-fit rounded-full border border-red-200 bg-white/60 px-3 py-1 text-xs font-medium text-red-700">
                     Requer atenção
@@ -237,24 +535,33 @@
             <div class="mt-5 overflow-hidden rounded-xl border border-red-200/60 bg-white/50">
 
                 {% for sale in pending_payments %}
+
                 <a
                     href="{% url 'sales:detail' sale.pk %}"
-                    class="group flex flex-col gap-2 border-b border-red-100/80 px-4 py-4 last:border-0 transition-colors hover:bg-white/70 sm:flex-row sm:items-center sm:justify-between"
+                    class="group flex flex-col gap-2 border-b border-red-100/80 px-4 py-4 transition-colors last:border-0 hover:bg-white/70 sm:flex-row sm:items-center sm:justify-between"
                 >
 
                     <div class="min-w-0">
+
                         <p class="truncate text-sm font-medium text-zinc-900">
                             {{ sale.selling_company }}
-                            <span class="mx-1 text-zinc-400">→</span>
+
+                            <span class="mx-1 text-zinc-400">
+                                →
+                            </span>
+
                             {{ sale.buying_company }}
                         </p>
 
                         <p class="mt-1 text-xs text-red-600">
                             Vencido em {{ sale.payment_due_date|date:'d/m/Y' }}
                         </p>
+
                     </div>
 
+
                     <div class="flex items-center gap-3">
+
                         <span class="text-sm font-semibold text-zinc-900">
                             R$ {{ sale.commission_amount }}
                         </span>
@@ -266,34 +573,59 @@
                             stroke="currentColor"
                             stroke-width="1.8"
                         >
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M9 5l7 7-7 7"
+                            />
                         </svg>
+
                     </div>
 
                 </a>
+
                 {% endfor %}
 
             </div>
 
         </div>
+
     </section>
+
     {% endif %}
 
+
+    <!-- STOCK / SUGGESTIONS -->
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
 
+        <!-- STOCK ALERTS -->
         <section class="glass-card overflow-hidden">
 
             <div class="flex items-center justify-between border-b border-zinc-200/60 px-5 py-4 sm:px-6">
 
                 <div class="flex items-center gap-3">
+
                     <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
-                        <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+
+                        <svg
+                            class="h-4.5 w-4.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                            />
                         </svg>
+
                     </div>
 
+
                     <div>
+
                         <h2 class="text-sm font-semibold text-zinc-900">
                             Alertas de estoque
                         </h2>
@@ -301,7 +633,9 @@
                         <p class="mt-0.5 text-xs text-zinc-500">
                             Produtos que precisam de atenção
                         </p>
+
                     </div>
+
                 </div>
 
             </div>
@@ -314,6 +648,7 @@
                 <div class="group flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-white/50 sm:px-6">
 
                     <div class="min-w-0">
+
                         <p class="truncate text-sm font-medium text-zinc-900">
                             {{ alert.relation.company }}
                         </p>
@@ -321,6 +656,7 @@
                         <p class="mt-0.5 truncate text-xs text-zinc-500">
                             {{ alert.relation.product }}
                         </p>
+
                     </div>
 
 
@@ -329,18 +665,25 @@
                         {% if alert.days_left <= 0 %}
 
                         <span class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-700">
+
                             <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+
                             Estoque esgotado
+
                         </span>
 
                         {% else %}
 
                         <span class="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700">
+
                             <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+
                             {{ alert.days_left }} dia(s)
+
                         </span>
 
                         {% endif %}
+
 
                         <a
                             href="{% url 'companies:detail' alert.relation.company.pk %}"
@@ -358,10 +701,21 @@
                 <div class="flex flex-col items-center justify-center px-6 py-12 text-center">
 
                     <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M5 13l4 4L19 7"/>
+
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M5 13l4 4L19 7"
+                            />
                         </svg>
+
                     </div>
 
                     <p class="mt-3 text-sm font-medium text-zinc-900">
@@ -377,8 +731,11 @@
                 {% endfor %}
 
             </div>
+
         </section>
 
+
+        <!-- CONNECTION SUGGESTIONS -->
         <section class="glass-card overflow-hidden">
 
             <div class="flex items-center justify-between border-b border-zinc-200/60 px-5 py-4 sm:px-6">
@@ -386,13 +743,26 @@
                 <div class="flex items-center gap-3">
 
                     <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
-                        <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M9.5 14.5L14.5 9.5M7 19a4 4 0 01-4-4c0-2.2 1.8-4 4-4h1m5-6h3a4 4 0 010 8h-1"/>
+
+                        <svg
+                            class="h-4.5 w-4.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M9.5 14.5L14.5 9.5M7 19a4 4 0 01-4-4c0-2.2 1.8-4 4-4h1m5-6h3a4 4 0 010 8h-1"
+                            />
                         </svg>
+
                     </div>
 
+
                     <div>
+
                         <h2 class="text-sm font-semibold text-zinc-900">
                             Sugestões de conexão
                         </h2>
@@ -400,6 +770,7 @@
                         <p class="mt-0.5 text-xs text-zinc-500">
                             Oportunidades identificadas
                         </p>
+
                     </div>
 
                 </div>
@@ -418,8 +789,13 @@
                         stroke="currentColor"
                         stroke-width="1.8"
                     >
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M9 5l7 7-7 7"
+                        />
                     </svg>
+
                 </a>
 
             </div>
@@ -434,27 +810,49 @@
                     <div class="flex items-start gap-3">
 
                         <div class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500">
-                            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M13 10V3L4 14h7v7l9-11h-7z"/>
+
+                            <svg
+                                class="h-3.5 w-3.5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                                />
                             </svg>
+
                         </div>
 
+
                         <div class="min-w-0">
+
                             <p class="text-sm font-medium text-zinc-900">
+
                                 {{ suggestion.selling_company }}
 
-                                <span class="mx-1 text-zinc-400">→</span>
+                                <span class="mx-1 text-zinc-400">
+                                    →
+                                </span>
 
                                 {{ suggestion.buying_company }}
+
                             </p>
 
+
                             <p class="mt-1 text-xs text-zinc-500">
+
                                 Produto:
+
                                 <span class="font-medium text-zinc-700">
                                     {{ suggestion.product }}
                                 </span>
+
                             </p>
+
                         </div>
 
                     </div>
@@ -466,10 +864,21 @@
                 <div class="flex flex-col items-center justify-center px-6 py-12 text-center">
 
                     <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-500">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M8 12h8m-4-4v8m8-4a8 8 0 11-16 0 8 8 0 0116 0z"/>
+
+                        <svg
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M8 12h8m-4-4v8m8-4a8 8 0 11-16 0 8 8 0 0116 0z"
+                            />
                         </svg>
+
                     </div>
 
                     <p class="mt-3 text-sm font-medium text-zinc-900">
@@ -491,5 +900,61 @@
     </div>
 
 </div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+    const startDateInput = document.getElementById('start_date');
+    const endDateInput = document.getElementById('end_date');
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
+
+    document.querySelectorAll('.period-button').forEach(button => {
+
+        button.addEventListener('click', () => {
+
+            const period = button.dataset.period;
+            const today = new Date();
+
+            let startDate = new Date(today);
+
+            if (period === 'month') {
+                startDate = new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    1
+                );
+            }
+
+            if (period === '30days') {
+                startDate.setDate(today.getDate() - 29);
+            }
+
+            if (period === 'year') {
+                startDate = new Date(
+                    today.getFullYear(),
+                    0,
+                    1
+                );
+            }
+
+            startDateInput.value = formatDate(startDate);
+            endDateInput.value = formatDate(today);
+
+            startDateInput.closest('form').submit();
+        });
+
+    });
+</script>
 
 {% endblock %}
