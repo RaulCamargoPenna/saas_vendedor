@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'suggestions',
     'dashboard',
     'landing',
+    'portfolio'
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,130 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Raul Camargo | Backend Developer{% endblock %}</title>
+
+    <meta
+        name="description"
+        content="Raul Camargo — Desenvolvedor Backend especializado em Python, Django, APIs, automações e integrações."
+    >
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: [
+                            'Inter',
+                            'ui-sans-serif',
+                            'system-ui',
+                            'sans-serif'
+                        ],
+                        mono: [
+                            'JetBrains Mono',
+                            'ui-monospace',
+                            'SFMono-Regular',
+                            'monospace'
+                        ],
+                    },
+
+                    colors: {
+                        ink: '#171717',
+                        paper: '#f6f7f9',
+                        line: '#dedfe3',
+                        accent: '#2563eb',
+                    },
+
+                    boxShadow: {
+                        soft: '0 10px 35px rgba(0, 0, 0, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        ::selection {
+            background: #171717;
+            color: white;
+        }
+
+        .grid-background {
+            background-image:
+                linear-gradient(rgba(23, 23, 23, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(23, 23, 23, 0.035) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        .project-card {
+            transition:
+                transform 180ms ease,
+                box-shadow 180ms ease,
+                border-color 180ms ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+            border-color: #b8bbc2;
+        }
+
+        .project-card:hover .project-arrow {
+            transform: translate(3px, -3px);
+        }
+
+        .project-arrow {
+            transition: transform 180ms ease;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 180ms ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-paper text-ink antialiased">
+
+    {% block body %}{% endblock %}
+
+</body>
+</html>

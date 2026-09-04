@@ -16,6 +16,7 @@ class ConnectionSuggestionListView(TenantQuerysetMixin, ListView):
     context_object_name = 'suggestions'
 
     def get_queryset(self):
+        generate_suggestions_for_tenant(self.request.user.tenant)
         return super().get_queryset().filter(status=ConnectionSuggestion.STATUS_PENDING).select_related(
             'selling_company', 'buying_company', 'product',
         )
