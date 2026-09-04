@@ -17,14 +17,11 @@ DEBUG = True if ENVIRONMENT == 'development' else False
 
 ALLOWED_HOSTS = [
     "localhost",
+    "127.0.0.1",
     "raulcamargo.com.br",
     "www.raulcamargo.com.br",
-    "https://raulcamargo.com.br",
-    "https://www.raulcamargo.com.br",
     "saas-vendedor.onrender.com",
-    "https://saas-vendedor.onrender.com/",
     "saas.raulcamargo.com.br",
-    "https://saas.raulcamargo.com.br/",
 ]
 
 INSTALLED_APPS = [
@@ -145,3 +142,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # else:
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'contato@saasvendedor.com.br'
+
