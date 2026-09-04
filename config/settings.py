@@ -22,7 +22,9 @@ ALLOWED_HOSTS = [
     "https://raulcamargo.com.br",
     "https://www.raulcamargo.com.br",
     "saas-vendedor.onrender.com",
-    "https://saas-vendedor.onrender.com/"
+    "https://saas-vendedor.onrender.com/",
+    "saas.raulcamargo.com.br"
+    "https://saas.raulcamargo.com.br/",
 ]
 
 INSTALLED_APPS = [
