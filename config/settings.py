@@ -23,7 +23,7 @@ ALLOWED_HOSTS = [
     "https://www.raulcamargo.com.br",
     "saas-vendedor.onrender.com",
     "https://saas-vendedor.onrender.com/",
-    "saas.raulcamargo.com.br"
+    "saas.raulcamargo.com.br",
     "https://saas.raulcamargo.com.br/",
 ]
 
