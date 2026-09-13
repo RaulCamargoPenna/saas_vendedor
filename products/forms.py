@@ -29,18 +29,19 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, tenant=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.tenant = tenant
         if tenant is not None:
             self.fields['category'].queryset = Category.objects.filter(tenant=tenant)
 
     def clean_name(self):
         name = self.cleaned_data['name']
         
-        queryset = Product.objects.filter( tenant=self.tenant, name=name)
+        queryset = Product.objects.filter(tenant=self.tenant, name=name)
 
         if self.instance:
             queryset = queryset.exclude(pk=self.instance.pk)
         
-        if Product.objects.filter(name=name).exists():
+        if queryset.exists():
             raise forms.ValidationError(
                 'Já existe um produto cadastrado com este nome.'
             )
