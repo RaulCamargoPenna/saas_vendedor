@@ -34,9 +34,11 @@ class ProductForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
+        
+        queryset = Product.objects.filter( tenant=self.tenant, name=name)
 
-        if not Product.objects.exclude(id=self.instance.pk).filter(name=name).exists() and self.instance.name != name:
-            return name
+        if self.instance:
+            queryset = queryset.exclude(pk=self.instance.pk)
         
         if Product.objects.filter(name=name).exists():
             raise forms.ValidationError(
