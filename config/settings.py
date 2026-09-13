@@ -23,6 +23,12 @@ ALLOWED_HOSTS = [
     "saas.raulcamargo.com.br",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://raulcamargo.com.br",
+    "https://www.raulcamargo.com.br",
+    "https://saas.raulcamargo.com.br",
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
