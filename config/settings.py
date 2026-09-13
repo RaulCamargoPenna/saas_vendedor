@@ -4,16 +4,15 @@ Django settings for the SaaS Vendedor project.
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-from urllib.parse import urlparse, parse_qsl
 load_dotenv()
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-change-this-secret-key-before-deploying-to-production'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = True if ENVIRONMENT == 'development' else False
+DEBUG = ENVIRONMENT == "development"
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -78,25 +77,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-if ENVIRONMENT == 'production':
-    tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+DATABASE_ENGINE = os.getenv("DATABASE_ENGINE", "sqlite")
 
+if DATABASE_ENGINE == "postgres":
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': tmpPostgres.path.replace('/', ''),
-            'USER': tmpPostgres.username,
-            'PASSWORD': tmpPostgres.password,
-            'HOST': tmpPostgres.hostname,
-            'PORT': 5432,
-            'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT", "5432"),
         }
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 
@@ -131,15 +129,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # E-mail: durante o desenvolvimento os e-mails de ativação são exibidos no
 # console. Para produção, configure um backend SMTP real.
-# if ENVIRONMENT == 'production':
-#     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#     EMAIL_HOST = 'smtp.gmail.com'
-#     EMAIL_PORT = os.getenv("EMAIL_PORT")
-#     EMAIL_USE_TLS = True
-#     EMAIL_HOST_USER = os.getenv("EMAIL_HOST")
-#     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
-#     DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# else:
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'contato@saasvendedor.com.br'
+if ENVIRONMENT == 'production':
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = os.getenv("EMAIL_PORT")
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'contato@saasvendedor.com.br'
 
