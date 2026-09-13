@@ -5,7 +5,7 @@ class DemoReadOnlyMiddleware:
     WRITE_METHODS = {'POST', 'PUT', 'PATCH', 'DELETE'}
 
     ALLOWED_PATHS = {
-        '/conta/logout/',
+        'saas/conta/logout/',
     }
 
     def __init__(self, get_response):
