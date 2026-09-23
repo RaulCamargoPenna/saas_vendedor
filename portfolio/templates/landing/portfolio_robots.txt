@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /saas/conta/
+Disallow: /saas/dashboard/
+Disallow: /saas/empresas/
+Disallow: /saas/produtos/
+Disallow: /saas/vendas/
+Disallow: /saas/sugestoes/
+
+Sitemap: https://raulcamargo.com.br/sitemap.xml
