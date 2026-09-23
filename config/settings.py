@@ -132,11 +132,15 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    'staticfiles': {
+        'BACKEND': (
+            'whitenoise.storage.CompressedManifestStaticFilesStorage'
+            if ENVIRONMENT == 'production'
+            else 'django.contrib.staticfiles.storage.StaticFilesStorage'
+        ),
     },
 }
 
@@ -155,4 +159,3 @@ if ENVIRONMENT == 'production':
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'contato@saasvendedor.com.br'
-

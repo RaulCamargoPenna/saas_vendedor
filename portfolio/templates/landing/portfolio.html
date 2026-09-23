@@ -2,7 +2,41 @@
 {% load static %}
 
 {% block title %}
-    Raul Camargo | Backend Developer
+    Raul Camargo | Desenvolvedor Python e Django
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://raulcamargo.com.br/#website",
+      "url": "https://raulcamargo.com.br/",
+      "name": "Raul Camargo — Desenvolvedor Python e Django",
+      "inLanguage": "pt-BR"
+    },
+    {
+      "@type": "Person",
+      "@id": "https://raulcamargo.com.br/#raul-camargo",
+      "name": "Raul Camargo",
+      "url": "https://raulcamargo.com.br/",
+      "image": "https://raulcamargo.com.br{% static 'images/raul.jpeg' %}",
+      "jobTitle": "Desenvolvedor Backend Python e Django",
+      "knowsAbout": [
+        "Python",
+        "Django",
+        "Django REST Framework",
+        "APIs REST",
+        "Automação de processos",
+        "Integração de sistemas",
+        "PostgreSQL"
+      ]
+    }
+  ]
+}
+</script>
 {% endblock %}
 
 {% block body %}
@@ -187,7 +221,11 @@
 
                         <img
                             src="{% static 'images/raul.jpeg' %}"
-                            alt="Raul Camargo"
+                            alt="Raul Camargo, desenvolvedor backend Python e Django"
+                            width="448"
+                            height="560"
+                            fetchpriority="high"
+                            decoding="async"
                             class="h-full w-full object-cover"
                         >
 
@@ -249,7 +287,7 @@
                 <div class="max-w-4xl">
 
                     <h2 class="text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-                        Desenvolvimento backend com foco em
+                        Desenvolvimento de sistemas em Python e Django com foco em
                         <span class="text-zinc-400">
                             negócio, arquitetura e performance.
                         </span>

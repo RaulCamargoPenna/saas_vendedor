@@ -7,22 +7,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     {% block icon %}
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="{% static 'images/raul.jpeg' %}"
-    />
+    <link rel="icon" type="image/jpeg" href="{% static 'images/raul.jpeg' %}" />
     {% endblock %}
 
     <title>
-      {% block title %}Raul Camargo | Backend Developer{% endblock %}
+      {% block title %}Raul Camargo | Desenvolvedor Python e Django{% endblock %}
     </title>
 
-    <meta
-      name="description"
-      content="Raul Camargo — Desenvolvedor Backend especializado em Python, Django, APIs, automações e integrações."
-    />
+    {% block meta %}
+    <meta name="description" content="Desenvolvedor Python e Django especializado em sistemas web, APIs REST, automações e integrações para transformar processos de negócio em software." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://raulcamargo.com.br/" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Raul Camargo" />
+    <meta property="og:title" content="Raul Camargo | Desenvolvedor Python e Django" />
+    <meta property="og:description" content="Sistemas web, APIs REST, automações e integrações desenvolvidos com Python e Django para resolver problemas reais de negócio." />
+    <meta property="og:url" content="https://raulcamargo.com.br/" />
+    <meta property="og:image" content="https://raulcamargo.com.br{% static 'images/raul.jpeg' %}" />
+    <meta property="og:image:alt" content="Raul Camargo, desenvolvedor Python e Django" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Raul Camargo | Desenvolvedor Python e Django" />
+    <meta name="twitter:description" content="Sistemas web, APIs REST, automações e integrações com Python e Django." />
+    <meta name="twitter:image" content="https://raulcamargo.com.br{% static 'images/raul.jpeg' %}" />
+    {% endblock %}
 
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" />
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -125,22 +135,16 @@
     </style>
 
     {% block extra_head %}{% endblock %}
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6KVLVG6EBT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("js", new Date());
+      gtag("config", "G-6KVLVG6EBT");
+    </script>
   </head>
-
-  <!-- Google tag (gtag.js) -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-6KVLVG6EBT"
-  ></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-
-    gtag("config", "G-6KVLVG6EBT");
-  </script>
 
   <body class="bg-paper text-ink antialiased">
     {% block body %}{% endblock %}

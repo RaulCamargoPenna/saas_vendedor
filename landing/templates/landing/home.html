@@ -1,7 +1,97 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
-    SaaS Vendedor — Gerencie sua carteira de clientes
+    CRM para Representantes Comerciais | SaaS Vendedor
+{% endblock %}
+
+{% block meta %}
+<meta name="description" content="CRM para representantes comerciais: gerencie clientes B2B, receba alertas de reposição, descubra oportunidades de venda e controle comissões." />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<link rel="canonical" href="https://saas.raulcamargo.com.br/" />
+<meta property="og:locale" content="pt_BR" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="SaaS Vendedor" />
+<meta property="og:title" content="CRM para Representantes Comerciais | SaaS Vendedor" />
+<meta property="og:description" content="Organize sua carteira B2B, antecipe reposições e transforme oportunidades em vendas." />
+<meta property="og:url" content="https://saas.raulcamargo.com.br/" />
+<meta property="og:image" content="https://saas.raulcamargo.com.br{% static 'images/icone.svg' %}" />
+<meta property="og:image:alt" content="SaaS Vendedor, sistema de gestão comercial" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="CRM para Representantes Comerciais | SaaS Vendedor" />
+<meta name="twitter:description" content="Gestão de clientes B2B, alertas de reposição, oportunidades de venda e controle de comissões." />
+<meta name="twitter:image" content="https://saas.raulcamargo.com.br{% static 'images/icone.svg' %}" />
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://saas.raulcamargo.com.br/#website",
+      "url": "https://saas.raulcamargo.com.br/",
+      "name": "SaaS Vendedor",
+      "description": "CRM para representantes comerciais e equipes de vendas B2B.",
+      "inLanguage": "pt-BR"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://saas.raulcamargo.com.br/#software",
+      "name": "SaaS Vendedor",
+      "url": "https://saas.raulcamargo.com.br/",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "CRM",
+      "operatingSystem": "Web",
+      "inLanguage": "pt-BR",
+      "description": "Sistema de gestão de carteira de clientes B2B com alertas de reposição, sugestões de conexão comercial, vendas e comissões.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL",
+        "description": "Cadastro gratuito"
+      },
+      "featureList": [
+        "Gestão de clientes B2B",
+        "Alertas de reposição de estoque",
+        "Sugestões de oportunidades comerciais",
+        "Controle de vendas e comissões"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://saas.raulcamargo.com.br/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Para quem é o SaaS Vendedor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O SaaS Vendedor foi criado para representantes comerciais, vendedores autônomos, distribuidores e equipes que administram uma carteira de clientes B2B."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como funcionam os alertas de reposição?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O sistema usa a última venda e o ciclo médio de consumo de cada produto para estimar quando o cliente precisará comprar novamente."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O sistema controla comissões?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. É possível registrar vendas entre empresas, os produtos negociados e a comissão relacionada a cada operação."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 {% endblock %}
 
 {% block content %}
@@ -25,7 +115,7 @@
         ">
 
             <a
-                href="/"
+                href="{% url 'landing:home' %}"
                 class="
                     text-base
                     font-semibold
@@ -240,7 +330,7 @@
             "
         >
 
-            Transforme clientes, dados e processos em
+            CRM para representantes comerciais que transforma sua carteira em
             <span
                 class="
                     bg-gradient-to-r
@@ -342,6 +432,73 @@
 
     </div>
 
+</section>
+
+<section class="border-y border-zinc-200/70 bg-white/60 px-6 py-24" aria-labelledby="para-quem">
+    <div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+        <div>
+            <p class="text-sm font-medium uppercase tracking-wider text-zinc-400">Gestão comercial B2B</p>
+            <h2 id="para-quem" class="mt-2 text-3xl font-semibold tracking-tight text-zinc-900 md:text-4xl">
+                Feito para quem vende para empresas
+            </h2>
+        </div>
+        <div class="grid gap-6 text-sm leading-7 text-zinc-600 sm:grid-cols-2">
+            <p>
+                Centralize empresas atendidas, produtos comprados e vendidos e o histórico comercial em um CRM pensado para representantes comerciais, vendedores autônomos e distribuidores.
+            </p>
+            <p>
+                Acompanhe o ciclo de consumo de cada cliente, priorize contatos no momento certo e encontre conexões entre quem compra e quem vende o mesmo produto.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="px-6 py-24" aria-labelledby="como-funciona">
+    <div class="mx-auto max-w-6xl">
+        <div class="max-w-2xl">
+            <p class="text-sm font-medium uppercase tracking-wider text-zinc-400">Como funciona</p>
+            <h2 id="como-funciona" class="mt-2 text-3xl font-semibold tracking-tight text-zinc-900 md:text-4xl">
+                Da organização da carteira à próxima venda
+            </h2>
+        </div>
+        <ol class="mt-10 grid gap-5 md:grid-cols-3">
+            <li class="glass-card rounded-2xl p-7">
+                <span class="text-sm font-semibold text-indigo-600">01</span>
+                <h3 class="mt-5 font-semibold text-zinc-900">Cadastre clientes e produtos</h3>
+                <p class="mt-2 text-sm leading-6 text-zinc-500">Registre as empresas da carteira e relacione os produtos que cada uma compra ou vende.</p>
+            </li>
+            <li class="glass-card rounded-2xl p-7">
+                <span class="text-sm font-semibold text-indigo-600">02</span>
+                <h3 class="mt-5 font-semibold text-zinc-900">Antecipe a reposição</h3>
+                <p class="mt-2 text-sm leading-6 text-zinc-500">Informe o ciclo de consumo e receba alertas para abordar o cliente antes do estoque acabar.</p>
+            </li>
+            <li class="glass-card rounded-2xl p-7">
+                <span class="text-sm font-semibold text-indigo-600">03</span>
+                <h3 class="mt-5 font-semibold text-zinc-900">Venda e acompanhe</h3>
+                <p class="mt-2 text-sm leading-6 text-zinc-500">Registre negociações, acompanhe comissões e mantenha o próximo contato sempre visível.</p>
+            </li>
+        </ol>
+    </div>
+</section>
+
+<section class="border-y border-zinc-200/70 bg-white/60 px-6 py-24" aria-labelledby="perguntas-frequentes">
+    <div class="mx-auto max-w-4xl">
+        <h2 id="perguntas-frequentes" class="text-3xl font-semibold tracking-tight text-zinc-900 md:text-4xl">Perguntas frequentes</h2>
+        <div class="mt-10 divide-y divide-zinc-200 border-y border-zinc-200">
+            <details class="group py-6">
+                <summary class="cursor-pointer list-none font-semibold text-zinc-900">Para quem é o SaaS Vendedor?</summary>
+                <p class="mt-3 max-w-3xl text-sm leading-7 text-zinc-500">Para representantes comerciais, vendedores autônomos, distribuidores e equipes que administram uma carteira de clientes B2B.</p>
+            </details>
+            <details class="group py-6">
+                <summary class="cursor-pointer list-none font-semibold text-zinc-900">Como funcionam os alertas de reposição?</summary>
+                <p class="mt-3 max-w-3xl text-sm leading-7 text-zinc-500">O sistema combina a última venda com o ciclo médio de consumo do produto para estimar quando o cliente precisará comprar novamente.</p>
+            </details>
+            <details class="group py-6">
+                <summary class="cursor-pointer list-none font-semibold text-zinc-900">O sistema controla comissões?</summary>
+                <p class="mt-3 max-w-3xl text-sm leading-7 text-zinc-500">Sim. Você registra a venda, as empresas envolvidas, os produtos negociados e a comissão de cada operação.</p>
+            </details>
+        </div>
+    </div>
 </section>
 
 
