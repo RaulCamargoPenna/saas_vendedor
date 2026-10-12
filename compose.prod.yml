@@ -1,8 +1,11 @@
 services:
   web:
+    restart: unless-stopped
     networks:
       - app
       - proxy
+  db:
+    restart: unless-stopped
 
 networks:
   proxy:

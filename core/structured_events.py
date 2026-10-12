@@ -61,13 +61,27 @@ def publish_event(source_dir, code, *, now=None, capture_ns=None):
         if previous is not None and previous.st_mtime >= now - 60:
             if not 0 < previous.st_size <= 8192:
                 raise EventPublicationError("invalid previous publication")
-            old_fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC,
+            old_fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK,
                              dir_fd=directory_fd)
             try:
                 old_info = os.fstat(old_fd)
-                old_bytes = os.read(old_fd, 8193)
-                if (old_info.st_ino, old_info.st_dev, old_info.st_mtime_ns) != (
-                        previous.st_ino, previous.st_dev, previous.st_mtime_ns):
+                def fingerprint(info):
+                    return (info.st_dev, info.st_ino, info.st_mode, info.st_uid,
+                            info.st_gid, info.st_nlink, info.st_size,
+                            info.st_mtime_ns, info.st_ctime_ns)
+
+                if not stat.S_ISREG(old_info.st_mode) or fingerprint(old_info) != fingerprint(previous):
+                    raise EventPublicationError("invalid previous publication")
+                chunks = []
+                remaining_bytes = previous.st_size
+                while remaining_bytes:
+                    chunk = os.read(old_fd, remaining_bytes)
+                    if not chunk:
+                        raise EventPublicationError("invalid previous publication")
+                    chunks.append(chunk)
+                    remaining_bytes -= len(chunk)
+                old_bytes = b"".join(chunks)
+                if fingerprint(os.fstat(old_fd)) != fingerprint(old_info):
                     raise EventPublicationError("invalid previous publication")
             finally:
                 os.close(old_fd)
@@ -88,13 +102,23 @@ def publish_event(source_dir, code, *, now=None, capture_ns=None):
 
                     record = json.loads(line, object_pairs_hook=unique_pairs,
                                         parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
-                    if (type(record) is not dict or set(record) != {"version", "timestamp", "code"}
+                    if (type(record) is not dict
+                            or set(record) not in ({"version", "timestamp", "code"},
+                                                   {"version", "timestamp", "code", "count"})
                             or type(record["version"]) is not int or record["version"] != 1
                             or type(record["timestamp"]) is not int
+                            or not 0 <= record["timestamp"] <= 253402300799
                             or record["code"] not in ("app.ready", "job.succeeded")
-                            or not now - 60 <= record["timestamp"] <= now + 60
-                            or record["timestamp"] > now):
+                            or ("count" in record and
+                                (record["code"] != "job.succeeded"
+                                 or type(record["count"]) is not int
+                                 or not 0 <= record["count"] <= 1000))
+                            or not now - 60 <= record["timestamp"] <= now + 60):
                         raise ValueError()
+                    if record["timestamp"] >= now:
+                        raise EventPublicationError("clock regression")
+            except EventPublicationError:
+                raise
             except (ValueError, UnicodeError, TypeError):
                 # Do not chain JSONDecodeError: its .doc may retain private bytes.
                 invalid = True
@@ -107,7 +131,12 @@ def publish_event(source_dir, code, *, now=None, capture_ns=None):
                      0o600, dir_fd=directory_fd)
         try:
             try:
-                os.write(fd, payload)
+                remaining = memoryview(payload)
+                while remaining:
+                    written = os.write(fd, remaining)
+                    if written <= 0:
+                        raise EventPublicationError("event publication unavailable")
+                    remaining = remaining[written:]
                 os.utime(fd, ns=(capture_ns, capture_ns))
                 if os.fstat(fd).st_mtime_ns != capture_ns:
                     raise EventPublicationError("unsupported publication timestamp")

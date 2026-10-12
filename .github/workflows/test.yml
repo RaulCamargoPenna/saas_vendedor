@@ -1,0 +1,26 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  suite-and-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt
+      - name: Test producer, readiness, and Compose contracts
+        env:
+          SECRET_KEY: local-test-placeholder-not-production
+        run: python -m pytest -q
+      - name: Build and smoke-test unprivileged image
+        run: |
+          docker build -t saas-vendedor-ci:local .
+          docker run --rm --network none -e SECRET_KEY=local-test-placeholder-not-production \
+            --entrypoint sh saas-vendedor-ci:local \
+            -c 'test "$(id -u):$(id -g)" = 10001:10001 && python manage.py collectstatic --noinput && test -f /app/staticfiles/admin/css/base.css'
