@@ -1,0 +1,12 @@
+# Explicit opt-in only. Never pass this overlay to an unattended release until
+# both deploy and rollback are replaced by identity-rotation-aware scripts.
+services:
+  web:
+    environment:
+      SAAS_EVENT_SOURCE_DIR: /run/saas-vendedor/events
+    volumes:
+      - type: bind
+        source: ${SAAS_EVENT_HOST_DIR:?Provision a private existing source directory first}
+        target: /run/saas-vendedor/events
+        bind:
+          create_host_path: false

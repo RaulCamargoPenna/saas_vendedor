@@ -1,12 +1,16 @@
 name: Deploy
 
 on:
-  push:
-    branches:
-      - master
+  workflow_run:
+    workflows: [Tests]
+    types: [completed]
 
 jobs:
   deploy:
+    # Fail closed until production's untracked scripts are replaced and identity
+    # rotation/deploy/rollback have been rehearsed. Remove `&& false` only in a
+    # separately reviewed maintenance change after the release gate is proven.
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master' && github.event.workflow_run.head_repository.full_name == github.repository && false }}
     runs-on: ubuntu-latest
 
     steps:
