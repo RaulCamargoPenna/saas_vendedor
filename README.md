@@ -1,114 +1,124 @@
 # SaaS Vendedor
 
-SaaS multitenant para vendedores gerenciarem as empresas que atendem, os
-produtos que essas empresas compram/vendem, alertas de reposição de estoque,
-sugestões de conexão comercial e vendas com comissão.
+A multitenant SaaS platform that enables salespeople to manage the companies
+they serve, the products those companies buy and sell, inventory replenishment
+alerts, business connection suggestions, and commission-based sales.
 
-Implementado seguindo o PRD do projeto (`prd-saas-vendedor.md`), com Django 5+
-(Class Based Views), Django Template Language + TailwindCSS (via CDN) e
+Implemented according to the project PRD (`prd-saas-vendedor.md`) using Django
+5+ (Class-Based Views), Django Template Language, Tailwind CSS (via CDN), and
 SQLite.
+
+Live at: https://saas.raulcamargo.com.br/
 
 ## Stack
 
 - Python 3.12+
-- Django 6.1 (atende ao requisito "Django 5+")
-- TailwindCSS via CDN (Play CDN) — não é necessário Node/npm para rodar o projeto
-- pytest + pytest-django para os testes automatizados
-- SQLite (banco padrão do Django)
+- Django 6.1 (meets the "Django 5+" requirement)
+- Tailwind CSS via CDN (Play CDN) — Node/npm is not required to run the project
+- pytest + pytest-django for automated tests
+- SQLite (Django's default database)
 
-## Como rodar o projeto
+## Running the project
 
-1. Crie e ative o ambiente virtual:
+1. Create and activate the virtual environment:
 
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate  # Windows: .venv\Scripts\activate
    ```
 
-2. Instale as dependências:
+2. Install the dependencies:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Gere as migrations e aplique no banco (o projeto é entregue **sem**
-   migrations geradas, propositalmente, para você criar as suas):
+3. Generate the migrations and apply them to the database (the project is
+   intentionally delivered **without** generated migrations so that you can
+   create them yourself):
 
    ```bash
    python manage.py makemigrations
    python manage.py migrate
    ```
 
-4. Crie um superusuário (necessário para ativar tenants pelo Django Admin):
+4. Create a superuser (required to activate tenants through Django Admin):
 
    ```bash
    python manage.py createsuperuser
    ```
 
-   O comando vai pedir e-mail e senha (o login é feito por e-mail, não por
-   username).
+   The command will ask for an email address and password (authentication uses
+   the email address rather than a username).
 
-5. Rode o servidor de desenvolvimento:
+5. Start the development server:
 
    ```bash
    python manage.py runserver
    ```
 
-6. Acesse:
-   - Site institucional: http://localhost:8000/
+6. Open:
+   - Public website: http://localhost:8000/
    - Login: http://localhost:8000/conta/login/
-   - Cadastro de novo tenant: http://localhost:8000/conta/cadastro/
-   - Django Admin (ativação de tenants): http://localhost:8000/admin/
+   - New tenant registration: http://localhost:8000/conta/cadastro/
+   - Django Admin (tenant activation): http://localhost:8000/admin/
 
-## Fluxo de teste manual sugerido
+## Suggested manual testing flow
 
-1. Acesse `/conta/cadastro/` e cadastre uma nova empresa (tenant) + usuário
-   administrador.
-2. O e-mail de ativação é impresso no **console** onde o `runserver` está
-   rodando (backend de e-mail configurado como `console` em desenvolvimento).
-   Copie o link e acesse-o para ativar a conta do usuário.
-3. Entre no Django Admin com o superusuário criado no passo 4 acima, vá em
-   **Tenants** e ative o tenant recém-criado (ação "Ativar tenants
-   selecionados").
-4. Volte para `/conta/login/` e faça login com o e-mail/senha cadastrados.
-5. No dashboard, cadastre empresas (`Empresas`), produtos (`Produtos`),
-   vincule produtos às empresas informando se compram ou vendem, registre
-   vendas (`Vendas`) e veja as sugestões de conexão (`Sugestões`).
+1. Open `/conta/cadastro/` and register a new company (tenant) and its
+   administrator user.
+2. The activation email is printed in the **console** where `runserver` is
+   running (the email backend is configured as `console` in development).
+   Copy the link and open it to activate the user account.
+3. Sign in to Django Admin with the superuser created in step 4 above, open
+   **Tenants**, and activate the newly created tenant (the "Activate selected
+   tenants" action).
+4. Return to `/conta/login/` and sign in with the registered email address and
+   password.
+5. From the dashboard, register companies (`Companies`) and products
+   (`Products`), associate products with companies by specifying whether they
+   buy or sell them, record sales (`Sales`), and review connection suggestions
+   (`Suggestions`).
 
-## Rodando os testes automatizados
+## Running the automated tests
 
 ```bash
 python -m pytest
 ```
 
-Todos os models, views e regras de negócio principais (isolamento
-multitenant, ativação de conta, cálculo de previsão de reposição de estoque,
-geração de sugestões de conexão e efeitos colaterais do registro de uma
-venda) possuem testes em `<app>/tests/`.
+All models, views, and main business rules (multitenant isolation, account
+activation, inventory replenishment forecast calculation, connection suggestion
+generation, and sale registration side effects) have tests under
+`<app>/tests/`.
 
-## Estrutura de apps
+## App structure
 
-| App | Responsabilidade |
+| App | Responsibility |
 |---|---|
-| `core` | Mixins reutilizáveis de isolamento multitenant e permissões |
-| `tenants` | Model `Tenant` e ativação pelo Django Admin |
-| `accounts` | Usuário customizado (login por e-mail), ativação de conta, funcionários |
-| `companies` | Cadastro de empresas clientes |
-| `products` | Cadastro de produtos e vínculo empresa-produto (compra/venda) |
-| `sales` | Registro de vendas, itens de venda e comissões |
-| `suggestions` | Sugestões de conexão comercial entre empresas |
-| `dashboard` | Painel principal pós-login com indicadores e alertas |
-| `landing` | Site institucional público |
+| `core` | Reusable mixins for multitenant isolation and permissions |
+| `tenants` | `Tenant` model and activation through Django Admin |
+| `accounts` | Custom user, email-based login, account activation, and employee management |
+| `companies` | Customer company management |
+| `products` | Product management and company-product buy/sell relationships |
+| `sales` | Sales, sale items, and commission management |
+| `suggestions` | Business connection suggestions between companies |
+| `dashboard` | Main authenticated dashboard with indicators and alerts |
+| `landing` | Public institutional website |
 
-## Observações importantes
+## Important notes
 
-- O projeto está configurado com `EMAIL_BACKEND` de console (os e-mails de
-  ativação aparecem no terminal). Para produção, configure um backend SMTP
-  real em `config/settings.py`.
-- `DEBUG = True` e `SECRET_KEY` de desenvolvimento estão no `settings.py`;
-  troque ambos antes de qualquer deploy.
-- Docker foi propositalmente deixado de fora desta entrega, conforme
-  definido no PRD (previsto apenas para as sprints finais).
-- O TailwindCSS é carregado via CDN (Play CDN) para manter o setup simples,
-  sem exigir Node/npm. Caso queira migrar para um build local do Tailwind
-  no futuro, isso pode ser adicionado sem alterar a estrutura dos templates.
+- The project uses the console `EMAIL_BACKEND` (activation emails are displayed
+  in the terminal). Configure a real SMTP backend in `config/settings.py` for
+  production.
+- Development values for `DEBUG = True` and `SECRET_KEY` are stored in
+  `settings.py`; replace both before any deployment.
+- Docker was intentionally left out of this delivery, as defined in the PRD
+  (it is planned only for the final sprints).
+- Tailwind CSS is loaded through the CDN (Play CDN) to keep setup simple and
+  avoid requiring Node/npm. A local Tailwind build can be added later without
+  changing the template structure.
+- `core.middlewares.SaaSDomainMiddleware` handles requests made through the
+  `saas.raulcamargo.com.br` subdomain. When a request from that host does not
+  already start with `/saas/`, the middleware prefixes its internal path with
+  `/saas`, allowing the subdomain to reuse the same URL routes defined under
+  the `/saas/` prefix without issuing a client-side redirect.
